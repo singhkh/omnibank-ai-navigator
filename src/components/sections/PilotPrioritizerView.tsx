@@ -52,17 +52,29 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   isPrioritizerCompleted,
   setRiskProfile
 }) => {
-  const [customerImpact, setCustomerImpact] = useState([5]);
+  // State for Customer-Facing Bot
+  const [customerNewRevenue, setCustomerNewRevenue] = useState([10]);
+  const [customerRetentionBoost, setCustomerRetentionBoost] = useState([5]);
+  const [customerBrandEnhancement, setCustomerBrandEnhancement] = useState([5]);
   const [customerRisk, setCustomerRisk] = useState([5]);
-  const [internalImpact, setInternalImpact] = useState([5]);
+
+  // State for Internal Advisor-Assist
+  const [internalNewRevenue, setInternalNewRevenue] = useState([5]);
+  const [internalRetentionBoost, setInternalRetentionBoost] = useState([10]);
+  const [internalBrandEnhancement, setInternalBrandEnhancement] = useState([3]);
   const [internalRisk, setInternalRisk] = useState([5]);
+  
   const [
     recommendationText,
     setRecommendationText,
   ] = useState<string>('Awaiting Calculation...');
 
-  const customerScore = customerImpact[0] / (customerRisk[0] * customerRisk[0]);
-  const internalScore = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
+  // Derived scores
+  const customerImpact = customerNewRevenue[0] + customerRetentionBoost[0] + customerBrandEnhancement[0];
+  const internalImpact = internalNewRevenue[0] + internalRetentionBoost[0] + internalBrandEnhancement[0];
+
+  const customerScore = customerImpact / (customerRisk[0] * customerRisk[0]);
+  const internalScore = internalImpact / (internalRisk[0] * internalRisk[0]);
 
   useEffect(() => {
     // Reset ROI analysis when view loads as it is no longer relevant
@@ -128,40 +140,55 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
                         <span>Financial Impact Model</span>
-                        <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{customerImpact[0]}</span>
+                        <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{customerImpact.toFixed(0)}</span>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="pt-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="impactA" className="font-semibold">
-                            Potential Financial Impact
-                          </Label>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                Estimate the <b>optimistic financial upside</b> of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                    <AccordionContent className="pt-4 space-y-6">
+                        <div className="space-y-3">
+                            <Label>New Revenue & Cross-Sell Lift</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={0}
+                                    max={20}
+                                    step={1}
+                                    value={customerNewRevenue}
+                                    onValueChange={setCustomerNewRevenue}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {customerNewRevenue[0]}%
+                              </span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <Slider
-                            id="impactA"
-                            min={1}
-                            max={10}
-                            step={1}
-                            value={customerImpact}
-                            onValueChange={setCustomerImpact}
-                          />
-                           <span className="font-bold text-primary w-8 text-center">
-                            {customerImpact[0]}
-                          </span>
+                        <div className="space-y-3">
+                            <Label>Customer Retention Boost</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={0}
+                                    max={15}
+                                    step={1}
+                                    value={customerRetentionBoost}
+                                    onValueChange={setCustomerRetentionBoost}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {customerRetentionBoost[0]}%
+                              </span>
+                            </div>
                         </div>
-                      </div>
+                         <div className="space-y-3">
+                            <Label>Brand Enhancement Value</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    value={customerBrandEnhancement}
+                                    onValueChange={setCustomerBrandEnhancement}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {customerBrandEnhancement[0]}
+                              </span>
+                            </div>
+                        </div>
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
@@ -222,40 +249,55 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     <AccordionTrigger className="text-base font-semibold">
                        <div className="flex items-center gap-2">
                           <span>Financial Impact Model</span>
-                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{internalImpact[0]}</span>
+                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{internalImpact.toFixed(0)}</span>
                         </div>
                     </AccordionTrigger>
-                    <AccordionContent className="pt-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="impactB" className="font-semibold">
-                            Potential Financial Impact
-                          </Label>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                Estimate the <b>pragmatic financial upside</b> of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
+                    <AccordionContent className="pt-4 space-y-6">
+                        <div className="space-y-3">
+                            <Label>New Revenue & Cross-Sell Lift</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={0}
+                                    max={20}
+                                    step={1}
+                                    value={internalNewRevenue}
+                                    onValueChange={setInternalNewRevenue}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {internalNewRevenue[0]}%
+                              </span>
+                            </div>
                         </div>
-                        <div className="flex items-center gap-4">
-                          <Slider
-                            id="impactB"
-                            min={1}
-                            max={10}
-                            step={1}
-                            value={internalImpact}
-                            onValueChange={setInternalImpact}
-                          />
-                          <span className="font-bold text-primary w-8 text-center">
-                            {internalImpact[0]}
-                          </span>
+                        <div className="space-y-3">
+                            <Label>Customer Retention Boost</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={0}
+                                    max={15}
+                                    step={1}
+                                    value={internalRetentionBoost}
+                                    onValueChange={setInternalRetentionBoost}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {internalRetentionBoost[0]}%
+                              </span>
+                            </div>
                         </div>
-                      </div>
+                         <div className="space-y-3">
+                            <Label>Brand Enhancement Value</Label>
+                             <div className="flex items-center gap-4">
+                                <Slider
+                                    min={1}
+                                    max={10}
+                                    step={1}
+                                    value={internalBrandEnhancement}
+                                    onValueChange={setInternalBrandEnhancement}
+                                />
+                               <span className="font-bold text-primary w-12 text-center">
+                                {internalBrandEnhancement[0]}
+                              </span>
+                            </div>
+                        </div>
                     </AccordionContent>
                   </AccordionItem>
                   <AccordionItem value="item-2">
@@ -331,5 +373,3 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
 };
 
 export default PilotPrioritizerView;
-
-    
