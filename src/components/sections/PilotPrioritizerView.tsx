@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -47,16 +48,22 @@ const sliderToSeverity = (value: number): RiskSeverity => {
 
 const getDynamicSummary = (id: string, value: number, baseSummary: string): string => {
     const severity = sliderToSeverity(value);
+    
+    // Custom summaries based on severity
+    if (id === 'adoption_risk') {
+      if (severity === "High") return `CRITICAL RISK: Our model shows employee resistance is very high, jeopardizing the entire project.`;
+      if (severity === "Medium") return `MODERATE RISK: Employee adoption will be a significant challenge requiring a dedicated change management plan.`;
+    }
+    if (id === 'reputation_risk' || id === 'model_bias' || id === 'security_risk') {
+         if (severity === "High") return `CRITICAL RISK: ${baseSummary}`;
+    }
+
     const prefix = {
         Low: "LOW RISK: ",
         Medium: "MODERATE RISK: ",
         High: "HIGH RISK: "
     }[severity];
     
-    if (id === 'adoption_risk' || id === 'reputation_risk' || id === 'model_bias' || id === 'security_risk') {
-         if (severity === "High") return `CRITICAL RISK: ${baseSummary}`;
-    }
-
     return prefix + baseSummary;
 }
 
@@ -103,65 +110,82 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const internalScore = internalRisk > 0 ? internalImpact / (internalRisk * internalRisk) : internalImpact;
 
   useEffect(() => {
-    // Reset ROI analysis and completion state when view loads
-    // as it is no longer relevant to the new comparison-based approach.
-    setRoiAnalysis(null);
-    setIsPrioritizerCompleted(false);
-    setRecommendationText('');
-  }, [setRoiAnalysis, setIsPrioritizerCompleted]);
+    // This effect runs when the component mounts.
+    // We want to reset the completion state unless the user is navigating back from a later step.
+    if (activeView === 'Pilot Prioritizer') {
+      setIsPrioritizerCompleted(false);
+      setRecommendationText('');
+    }
+  }, [ ]);
 
   const handleCalculate = () => {
-    let newRiskProfile: Risk[];
-    const winner = internalScore >= customerScore ? 'internal' : 'customer';
+    // 1. Calculate composite scores from the detailed slider inputs.
+    const customerFinancialImpact = (customerNewRevenue[0] * 0.4) + (customerRetentionBoost[0] * 0.4) + (customerBrandEnhancement[0] * 0.2);
+    const customerImplementationRisk = (customerModelRisk[0] * 0.5) + (customerSecurityRisk[0] * 0.3) + (customerReputationRisk[0] * 0.2);
 
+    const internalFinancialImpact = (internalNewRevenue[0] * 0.5) + (internalRetentionBoost[0] * 0.3) + (internalBrandEnhancement[0] * 0.2);
+    const internalImplementationRisk = (internalModelRisk[0] * 0.2) + (internalAdoptionRisk[0] * 0.6) + (internalDataRisk[0] * 0.2);
+
+    // 2. Run the risk-adjusted recommendation formula.
+    const finalCustomerScore = customerImplementationRisk > 0 ? customerFinancialImpact / (customerImplementationRisk * customerImplementationRisk) : customerFinancialImpact;
+    const finalInternalScore = internalImplementationRisk > 0 ? internalFinancialImpact / (internalImplementationRisk * internalImplementationRisk) : internalFinancialImpact;
+
+    // 3. Determine the winning path.
+    const winner = finalInternalScore >= finalCustomerScore ? 'internal' : 'customer';
+
+    // 4. Build the new dynamic risk profile
+    let newRiskProfile: Risk[] = [];
     const templateToUse = riskTemplate[winner];
-    let recommendedPathText = '';
 
     if (winner === 'internal') {
-        recommendedPathText = 'Recommended Pilot: Internal Advisor-Assist Tool';
         newRiskProfile = templateToUse.map(risk => {
             let severityValue: number;
+            let summary: string;
             switch (risk.id) {
                 case 'model_risk':
                     severityValue = internalModelRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 case 'adoption_risk':
                     severityValue = internalAdoptionRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 case 'data_security_risk':
                     severityValue = internalDataRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 default:
                     severityValue = 5;
+                    summary = risk.summary;
             }
-            const severity = sliderToSeverity(severityValue);
-            const summary = getDynamicSummary(risk.id, severityValue, risk.summary);
-            return { ...risk, severity, summary };
+            return { ...risk, severity: sliderToSeverity(severityValue), summary };
         });
-    } else {
-        recommendedPathText = 'Recommended Pilot: Customer-Facing Chatbot';
+    } else { // customer
         newRiskProfile = templateToUse.map(risk => {
             let severityValue: number;
+            let summary: string;
             switch(risk.id) {
                 case 'model_bias':
                     severityValue = customerModelRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 case 'security_risk':
                     severityValue = customerSecurityRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 case 'reputation_risk':
                     severityValue = customerReputationRisk[0];
+                    summary = getDynamicSummary(risk.id, severityValue, risk.summary);
                     break;
                 default:
                     severityValue = 5;
+                    summary = risk.summary;
             }
-            const severity = sliderToSeverity(severityValue);
-            const summary = getDynamicSummary(risk.id, severityValue, risk.summary);
-            return { ...risk, severity, summary };
+            return { ...risk, severity: sliderToSeverity(severityValue), summary };
         });
     }
 
-    setRecommendationText(recommendedPathText);
+    setRecommendationText(`Recommended Pilot: ${winner === 'internal' ? 'Internal Advisor-Assist Tool' : 'Customer-Facing Chatbot'}`);
     setRiskProfile(newRiskProfile);
     setIsPrioritizerCompleted(true);
   };
@@ -202,7 +226,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                             <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="max-w-xs">Expand this section to model the potential financial upside. Adjust the underlying drivers to see how they affect the overall impact score.</p>
+                            <p className="max-w-xs">Estimate the **optimistic financial upside** of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)</p>
                           </TooltipContent>
                         </Tooltip>
                         <span>Financial Impact Model</span>
@@ -268,7 +292,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                 <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p className="max-w-xs">Expand this section to model the potential downsides. Adjust the granular risk factors to see how they influence the overall risk score for this option.</p>
+                                <p className="max-w-xs">Estimate the **severe external risks** of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)</p>
                             </TooltipContent>
                         </Tooltip>
                         <span>Implementation Risk Model</span>
@@ -321,7 +345,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                   <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                               </TooltipTrigger>
                               <TooltipContent>
-                                  <p className="max-w-xs">Expand this section to model the potential financial upside. Adjust the underlying drivers to see how they affect the overall impact score.</p>
+                                  <p className="max-w-xs">Estimate the **pragmatic financial upside** of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)</p>
                               </TooltipContent>
                           </Tooltip>
                           <span>Financial Impact Model</span>
@@ -330,7 +354,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     </AccordionTrigger>
                     <AccordionContent className="pt-4 space-y-6">
                         <div className="space-y-3">
-                            <Label>New Revenue & Cross-Sell Lift</Label>
+                            <Label>Efficiency Gains & Cost Savings</Label>
                              <div className="flex items-center gap-4">
                                 <Slider
                                     min={0}
@@ -346,7 +370,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                             </div>
                         </div>
                         <div className="space-y-3">
-                            <Label>Customer Retention Boost</Label>
+                            <Label>Compliance Improvement</Label>
                              <div className="flex items-center gap-4">
                                 <Slider
                                     min={0}
@@ -362,7 +386,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                             </div>
                         </div>
                          <div className="space-y-3">
-                            <Label>Brand Enhancement Value</Label>
+                            <Label>Capability Building</Label>
                              <div className="flex items-center gap-4">
                                 <Slider
                                     min={1}
@@ -387,7 +411,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                   <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                               </TooltipTrigger>
                               <TooltipContent>
-                                  <p className="max-w-xs">Expand this section to model the potential downsides. Adjust the granular risk factors to see how they influence the overall risk score for this option.</p>
+                                  <p className="max-w-xs">Estimate the **contained internal risks** of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)</p>
                               </TooltipContent>
                           </Tooltip>
                           <span>Implementation Risk Model</span>
