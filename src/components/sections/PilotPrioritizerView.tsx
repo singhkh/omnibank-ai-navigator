@@ -61,6 +61,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
     } else {
       setRecommendationText('Recommended Pilot: Customer-Facing Chatbot');
     }
+    setIsPrioritizerCompleted(true);
   };
 
   return (

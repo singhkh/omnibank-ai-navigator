@@ -16,12 +16,6 @@ export default function Home() {
   const [riskAssessment, setRiskAssessment] = useState<string | null>(null);
   const [isPrioritizerCompleted, setIsPrioritizerCompleted] = useState(false);
 
-  // For simplicity, we'll enable all views after the first step.
-  // In a real scenario, this would be driven by completion of each step.
-  const isPilotReady = true;
-  const isRiskReady = true;
-  const isVerdictReady = true;
-
   const renderContent = () => {
     switch (activeView) {
       case 'AI Landscape':
@@ -68,9 +62,9 @@ export default function Home() {
       <Navigation 
         activeView={activeView} 
         setActiveView={setActiveView}
-        isPilotReady={isPilotReady}
-        isRiskReady={isRiskReady}
-        isVerdictReady={isVerdictReady}
+        isPilotReady={true}
+        isRiskReady={isPrioritizerCompleted}
+        isVerdictReady={isPrioritizerCompleted}
       />
       <main className="flex-grow container mx-auto p-4 md:p-8">
         <div className="transition-opacity duration-300 ease-in-out">
