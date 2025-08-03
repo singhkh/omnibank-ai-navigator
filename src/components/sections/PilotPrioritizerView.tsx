@@ -32,20 +32,16 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   }, [setRoiAnalysis]);
 
   const handleCalculate = () => {
-    const scoreA = customerImpact[0] * 2 - customerRisk[0];
-    const scoreB = internalImpact[0] * 2 - internalRisk[0];
+    const scoreA = customerImpact[0] / (customerRisk[0] * customerRisk[0]);
+    const scoreB = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
 
-    if (scoreA > scoreB) {
+    if (scoreB >= scoreA) {
       setRecommendationText(
-        'Option A: Customer-Facing Bot is recommended. It has a higher potential impact relative to its implementation risk.'
-      );
-    } else if (scoreB > scoreA) {
-      setRecommendationText(
-        'Option B: Internal Advisor-Assist is recommended. It provides a more balanced risk/reward profile and is a safer initial investment.'
+        'Recommended Pilot: Internal Advisor-Assist Tool'
       );
     } else {
       setRecommendationText(
-        'Both options present a similar risk/reward profile. Further analysis is needed to differentiate them.'
+        'Recommended Pilot: Customer-Facing Chatbot'
       );
     }
   };
@@ -92,7 +88,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
             <div className="space-y-3">
               <Label htmlFor="impactB" className="font-semibold">Potential Financial Impact</Label>
               <div className="flex items-center gap-4">
-                <Slider id="impactB" min={1} max={10} step={1} value={internalImpact} onValueChange={setInternalImpact} />
+                <Slider id="impactB" min={1} max={10} step={1} value={internalImpact} onValueeChange={setInternalImpact} />
                 <span className="font-bold text-primary w-8 text-center">{internalImpact[0]}</span>
               </div>
             </div>
