@@ -2,8 +2,8 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Target, FlaskConical, Users, Castle, ArrowRight } from 'lucide-react';
+import { Target, FlaskConical, Users, Castle } from 'lucide-react';
+import RoadmapModal from '../common/RoadmapModal';
 
 const JustificationCard = ({ icon: Icon, title, text }: { icon: React.ElementType, title: string, text: string }) => (
   <Card className="text-center shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
@@ -73,9 +73,7 @@ const TheVerdictView: React.FC = () => {
                     {nextSteps.map((step, index) => <li key={index} className="text-base">{step}</li>)}
                 </ul>
                 <div className="text-center pt-6">
-                    <Button size="lg" disabled>
-                        View Full Implementation Roadmap <ArrowRight className="ml-2" />
-                    </Button>
+                   <RoadmapModal />
                 </div>
             </CardContent>
           </Card>
