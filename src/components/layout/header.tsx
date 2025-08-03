@@ -36,26 +36,31 @@ const HelpModal = () => (
       <div className="py-4">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
-            <AccordionTrigger className="font-semibold">Our Goal: Making a Data-Driven Decision</AccordionTrigger>
+            <AccordionTrigger className="font-semibold">Our Goal: A Guided Path to a Strategic Decision</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-              <p>This tool is designed to move beyond intuition and provide a clear, evidence-based framework for OmniBank's first major investment in Generative AI. It allows us to simulate the trade-offs between two potential pilot programs by weighing their financial potential against their significant implementation risks.</p>
-              <p><strong>AI Landscape & Risk Dashboards:</strong> These static screens provide the strategic context based on our internal analysis of the market and the ethical/regulatory environment.</p>
-              <p><strong>Pilot Prioritizer:</strong> This is the interactive core where you can explore scenarios and see their impact on our strategic recommendation.</p>
+              <p>The AI Investment Navigator is designed to walk you through a logical decision-making process. The initial steps are locked to ensure we build our conclusion on a solid foundation of strategy and data.</p>
+              <ul className="list-disc pl-5 space-y-1">
+                <li><strong>AI Landscape:</strong> Understand the market context.</li>
+                <li><strong>Pilot Prioritizer:</strong> Interact with the core tool to weigh your options and generate a recommendation.</li>
+                <li><strong>Risk & Verdict:</strong> Once a recommendation is calculated, the final sections unlock, allowing you to review the specific risks and the implementation plan for your chosen path.</li>
+              </ul>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger className="font-semibold">How to Use the Prioritizer Tool: A Step-by-Step Guide</AccordionTrigger>
+            <AccordionTrigger className="font-semibold">How to Use the Prioritizer Tool: The Key Step</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-                <p><strong>Step 1: Evaluate "Option A: Customer-Facing Bot"</strong><br/>This option represents a high-risk, high-reward public launch. Adjust the sliders based on your assessment of financial impact and implementation risk.</p>
-                <p><strong>Step 2: Evaluate "Option B: Internal Advisor-Assist"</strong><br/>This option represents a lower-risk, capability-building internal launch. Adjust the sliders based on projected efficiency gains and the more contained risks of an internal project.</p>
-                <p><strong>Step 3: Calculate the Recommendation</strong><br/>Click the "Calculate Recommendation" button. The "Recommended Path" at the bottom will update instantly based on your inputs.</p>
+                <p>This interactive screen is where you will make the central trade-off analysis. Your inputs here will determine the final recommendation and unlock the rest of the dashboard.</p>
+                <p><strong>Step 1: Model the Scenarios</strong><br/>Using the sliders, set your assumptions for both the "Customer-Facing Bot" and the "Internal Advisor-Assist" options.</p>
+                <p><strong>Step 2: Generate the Recommendation</strong><br/>Click the "Calculate Recommendation" button. The tool will run a risk-adjusted analysis and display the recommended pilot program.</p>
+                <p><strong>Step 3: Unlock the Final Analysis</strong><br/>Once the recommendation is calculated, the navigation buttons for "Risk Dashboard" and "The Verdict" will become active, and a button will appear to guide you to the next step.</p>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger className="font-semibold">Understanding the Recommendation</AccordionTrigger>
+            <AccordionTrigger className="font-semibold">Understanding the Dynamic Dashboards</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-               <p>The recommendation is based on a risk-adjusted scoring model: <strong>Priority Score = Financial Impact / (Risk Score)²</strong>.</p>
-               <p>In the current "Peak of Hype" for AI, our greatest threat is moving too quickly. This model intentionally penalizes risk, guiding us to learn safely before we try to earn aggressively.</p>
+               <p>The final sections of this tool are dynamically generated based on your decision in the Prioritizer.</p>
+               <p><strong>The Risk Dashboard:</strong> This screen does not show a generic list of all possible risks. It displays a tailored risk assessment specific to the recommended pilot program.</p>
+               <p><strong>The Verdict & Roadmap:</strong> These final screens provide a summary justification and a concrete implementation plan for the single, recommended path, ensuring our strategy is focused and actionable.</p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
