@@ -8,12 +8,11 @@ import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
 interface Risk {
-  icon: string;
   title: string;
+  icon: string;
+  severity: "High" | "Medium" | "Low";
   summary: string;
-  mitigation: string[];
-  riskLevel: 'High' | 'Medium' | 'Low';
-  severity: 'High' | 'Medium' | 'Low';
+  mitigations: string[];
 }
 
 interface RiskDashboardViewProps {
@@ -35,17 +34,17 @@ interface RiskCardProps {
     icon: string;
     title: string;
     summary: string;
-    mitigation: string[];
+    mitigations: string[];
     severity: 'High' | 'Medium' | 'Low';
 }
 
-const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigation, severity }) => {
+const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigations, severity }) => {
     const Icon = iconMap[icon] || Cog;
     return (
         <Card className={cn(
             "flex flex-col shadow-lg transition-transform duration-300 ease-in-out hover:scale-105",
             "border-l-4",
-            severity === 'High' ? 'border-destructive' : 'border-yellow-500'
+            severity === 'High' ? 'border-destructive' : severity === 'Medium' ? 'border-yellow-500' : 'border-green-500'
         )}>
             <CardHeader>
                 <div className="flex items-center gap-4">
@@ -58,7 +57,7 @@ const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigation, s
                 <div>
                     <h4 className="font-semibold mb-2">Mitigation Strategies:</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
-                        {mitigation.map((item, index) => <li key={index}>{item}</li>)}
+                        {mitigations.map((item, index) => <li key={index}>{item}</li>)}
                     </ul>
                 </div>
             </CardContent>
