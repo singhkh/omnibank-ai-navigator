@@ -27,7 +27,7 @@ const riskData = [
   {
     riskFactor: 'Accountability/Regulatory',
     customerBot: 'High Risk',
-    internalAssist: 'High Risk',
+    internalAssist: 'Medium Risk',
   },
   {
     riskFactor: 'Transparency/Explainability',
