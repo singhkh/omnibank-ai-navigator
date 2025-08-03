@@ -13,6 +13,7 @@ import { Loader2, ArrowRight } from 'lucide-react';
 import type { View } from '../layout/navigation';
 import { useToast } from '@/hooks/use-toast';
 import Image from 'next/image';
+import hypeCycleImg from '../../../assets/hcfinai24.png';
 
 const formSchema = z.object({
   userRole: z.string().min(2, {
@@ -71,7 +72,7 @@ const AiLandscapeView: React.FC<AiLandscapeViewProps> = ({ setSelectedTool, setA
 
       <div className="w-full max-w-4xl mx-auto">
         <Image 
-          src="https://placehold.co/1200x600.png"
+          src={hypeCycleImg}
           alt="Gartner Hype Cycle Diagram" 
           width={1200}
           height={600}
