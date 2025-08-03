@@ -36,31 +36,28 @@ const HelpModal = () => (
       <div className="py-4">
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
-            <AccordionTrigger className="font-semibold text-left">Our Goal: A Guided Path to a Strategic Decision</AccordionTrigger>
+            <AccordionTrigger className="font-semibold text-left">Our Goal: From Assumption to Insight</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-              <p>The AI Investment Navigator is designed to walk you through a logical decision-making process. The initial steps are locked to ensure we build our conclusion on a solid foundation of strategy and data.</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li><b>Step 1: AI Landscape:</b> Understand the market context.</li>
-                <li><b>Step 2: Pilot Prioritizer:</b> Interact with the core tool to weigh your options and generate a recommendation.</li>
-                <li><b>Step 3: Risk & Verdict:</b> Once a recommendation is calculated, the final sections unlock, allowing you to review the specific risks and the implementation plan for your chosen path.</li>
-              </ul>
+              <p>The AI Investment Navigator is a dynamic modeling tool. It is designed to transform your strategic assumptions into a clear, data-driven recommendation. The workflow guides you from high-level strategy to a specific, actionable plan.</p>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
-            <AccordionTrigger className="font-semibold text-left">How to Use the Prioritizer Tool: The Key Step</AccordionTrigger>
+            <AccordionTrigger className="font-semibold text-left">How to Use the Prioritizer Tool: A Step-by-Step Guide</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-                <p>This interactive screen is where you will make the central trade-off analysis. Your inputs here will determine the final recommendation and unlock the rest of the dashboard.</p>
-                <p><b>Step 1: Model the Scenarios</b><br/>Using the sliders, set your assumptions for both the "Customer-Facing Bot" and the "Internal Advisor-Assist" options.</p>
-                <p><b>Step 2: Generate the Recommendation</b><br/>Click the "Calculate Recommendation" button. The tool will run a risk-adjusted analysis and display the recommended pilot program.</p>
-                <p><b>Step 3: Unlock the Final Analysis</b><br/>Once the recommendation is calculated, the navigation buttons for "Risk Dashboard" and "The Verdict" will become active, and a new card will appear to guide you to the next step.</p>
+                <p>This interactive screen is the engine of the Navigator.</p>
+                <ul className="list-decimal pl-5 space-y-2">
+                  <li><b>Expand the Modeling Sections</b><br/>For each option ("Customer-Facing" and "Internal-Assist"), click to expand the "Financial Impact Model" and "Implementation Risk Model" sections.</li>
+                  <li><b>Adjust the Granular Levers</b><br/>Use the detailed sliders within each section to reflect your strategic assumptions. Adjust specific factors like "New Revenue & Cross-Sell Lift" or "Regulatory & Compliance Fines." As you move the sliders, you will see the "Overall Score" for that section update in real-time.</li>
+                  <li><b>Generate the Full Analysis</b><br/>Once you are satisfied with your model, click the "Calculate Recommendation" button. This action will generate the final verdict and populate the "Risk Dashboard" with a dynamic analysis tailored specifically to your inputs. The final sections of the tool will then unlock.</li>
+                </ul>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
-            <AccordionTrigger className="font-semibold text-left">Understanding the Dynamic Dashboards</AccordionTrigger>
+            <AccordionTrigger className="font-semibold text-left">Understanding Your Dynamic Results</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-               <p>The final sections of this tool are dynamically generated based on your decision in the Prioritizer.</p>
-               <p><b>The Risk Dashboard:</b> This screen does not show a generic list of all possible risks. It displays a tailored risk assessment specific to the recommended pilot program.</p>
-               <p><b>The Verdict & Roadmap:</b> These final screens provide a summary justification and a concrete implementation plan for the single, recommended path, ensuring our strategy is focused and actionable.</p>
+               <p>This tool does more than just show static data; it creates a custom report based on your modeling.</p>
+               <p><b>The Risk Dashboard:</b> After you calculate a recommendation, this screen will display a set of risk cards. The severity (color) and summary text of these cards are dynamically generated. If you model a high regulatory risk, the corresponding risk card will turn red and its text will reflect that critical danger.</p>
+               <p><b>The Verdict & Roadmap:</b> These final screens summarize the justification for the single recommended path that resulted from your specific inputs and provide a concrete implementation plan to move forward.</p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
