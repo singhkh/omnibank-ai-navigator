@@ -37,23 +37,25 @@ const HelpModal = () => (
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger className="font-semibold">Our Goal: Making a Data-Driven Decision</AccordionTrigger>
-            <AccordionContent className="text-muted-foreground">
-              This tool is designed to move beyond gut feelings and hype. By systematically evaluating potential AI pilot projects based on their financial impact and implementation risk, we can make informed, data-driven decisions that align with OmniBank's strategic objectives.
+            <AccordionContent className="text-muted-foreground space-y-2">
+              <p>This tool is designed to move beyond intuition and provide a clear, evidence-based framework for OmniBank's first major investment in Generative AI. It allows us to simulate the trade-offs between two potential pilot programs by weighing their financial potential against their significant implementation risks.</p>
+              <p><strong>AI Landscape & Risk Dashboards:</strong> These static screens provide the strategic context based on our internal analysis of the market and the ethical/regulatory environment.</p>
+              <p><strong>Pilot Prioritizer:</strong> This is the interactive core where you can explore scenarios and see their impact on our strategic recommendation.</p>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-2">
             <AccordionTrigger className="font-semibold">How to Use the Prioritizer Tool: A Step-by-Step Guide</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-                <p><strong>Step 1: Adjust the Sliders:</strong> Use the sliders for both "Option A" and "Option B" to represent your assessment of their potential impact and risk.</p>
-                <p><strong>Step 2: Click "Calculate":</strong> Once you have set the values, press the "Calculate Recommendation" button.</p>
-                <p><strong>Step 3: Review the Output:</strong> The tool will display the recommended pilot project based on the scores calculated from your inputs.</p>
+                <p><strong>Step 1: Evaluate "Option A: Customer-Facing Bot"</strong><br/>This option represents a high-risk, high-reward public launch. Adjust the sliders based on your assessment of financial impact and implementation risk.</p>
+                <p><strong>Step 2: Evaluate "Option B: Internal Advisor-Assist"</strong><br/>This option represents a lower-risk, capability-building internal launch. Adjust the sliders based on projected efficiency gains and the more contained risks of an internal project.</p>
+                <p><strong>Step 3: Calculate the Recommendation</strong><br/>Click the "Calculate Recommendation" button. The "Recommended Path" at the bottom will update instantly based on your inputs.</p>
             </AccordionContent>
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="font-semibold">Understanding the Recommendation</AccordionTrigger>
             <AccordionContent className="text-muted-foreground space-y-2">
-               <p>The recommendation is based on a simple but powerful formula: <strong>Score = Impact / (Risk * Risk)</strong>.</p>
-               <p>This formula heavily penalizes higher risk, ensuring that we prioritize projects that are not only promising in their potential returns but also more likely to be implemented successfully and safely. The project with the higher score is the one recommended for the pilot.</p>
+               <p>The recommendation is based on a risk-adjusted scoring model: <strong>Priority Score = Financial Impact / (Risk Score)²</strong>.</p>
+               <p>In the current "Peak of Hype" for AI, our greatest threat is moving too quickly. This model intentionally penalizes risk, guiding us to learn safely before we try to earn aggressively.</p>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
