@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import type { View } from '../layout/navigation';
 import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
-import { Info, ArrowRight } from 'lucide-react';
+import { Info, ArrowRight, Megaphone } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -22,12 +22,21 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 
+interface RiskProfile {
+    title: string;
+    icon: string;
+    severity: "High" | "Medium" | "Low";
+    summary: string;
+    mitigations: string[];
+}
+
 interface PilotPrioritizerViewProps {
   tool: string | null;
   setRoiAnalysis: (analysis: AnalyzePilotProjectOutput | null) => void;
   setActiveView: (view: View) => void;
   setIsPrioritizerCompleted: (isCompleted: boolean) => void;
   isPrioritizerCompleted: boolean;
+  setRiskProfile: (profile: RiskProfile[]) => void;
 }
 
 const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
@@ -36,6 +45,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   setActiveView,
   setIsPrioritizerCompleted,
   isPrioritizerCompleted,
+  setRiskProfile
 }) => {
   const [customerImpact, setCustomerImpact] = useState([5]);
   const [customerRisk, setCustomerRisk] = useState([5]);
@@ -55,13 +65,28 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const handleCalculate = () => {
     const scoreA = customerImpact[0] / (customerRisk[0] * customerRisk[0]);
     const scoreB = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
+    
+    const internalRiskData = [
+      { title: "Model Risk", icon: "brain", severity: "Medium", summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.", mitigations: ["Human advisors act as a final validation layer.", "Continuously monitor model performance on internal data.", "Develop an internal 'AI Explainability' dashboard."] },
+      { title: "Implementation & Adoption Risk", icon: "people", severity: "High", summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.", mitigations: ["Launch an 'AI Champion' program with early adopters.", "Develop a robust training and change management plan.", "Clearly communicate that the tool is for augmentation, not replacement."] },
+      { title: "Data Governance & Security Risk", icon: "shield", severity: "Medium", summary: "Risk of internal data misuse. Less severe than a public breach but still significant.", mitigations: ["Enforce strict role-based access controls within the bank.", "Audit all data access logs.", "All data remains within OmniBank's secure infrastructure."] }
+    ];
+
+    const customerRiskData = [
+      { title: "Model Risk & Bias", icon: "brain", severity: "High", summary: "CATACROPHIC RISK of biased advice causing direct customer harm and regulatory fines.", mitigations: ["Requires third-party ethical AI audits before launch.", "Implement complex bias detection algorithms.", "Extensive 'red team' testing for harmful outputs."] },
+      { title: "Data Privacy & Security Risk", icon: "shield", severity: "High", summary: "Massive risk of a public data breach of sensitive customer financial data, leading to lawsuits.", mitigations: ["Requires end-to-end post-quantum cryptography.", "Full compliance with GDPR, CCPA, and the AI Act.", "Significant investment in cybersecurity infrastructure."] },
+      { title: "Reputational & Trust Risk", icon: "megaphone", severity: "High", summary: "A single instance of a 'hallucinated' or harmful answer going viral could destroy customer trust.", mitigations: ["Implement a multi-layered content moderation system.", "Extensive PR and crisis communication plan required.", "Limit initial launch to a small, opt-in beta group."] }
+    ];
+
 
     if (scoreB >= scoreA) {
       setRecommendationText(
         'Recommended Pilot: Internal Advisor-Assist Tool'
       );
+      setRiskProfile(internalRiskData);
     } else {
       setRecommendationText('Recommended Pilot: Customer-Facing Chatbot');
+      setRiskProfile(customerRiskData);
     }
     setIsPrioritizerCompleted(true);
   };

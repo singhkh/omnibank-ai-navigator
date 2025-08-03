@@ -3,86 +3,49 @@
 import React from 'react';
 import type { View } from '../layout/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { BrainCircuit, Users, Shield, Cog, DollarSign, ArrowRight } from 'lucide-react';
+import { BrainCircuit, Users, Shield, Cog, DollarSign, ArrowRight, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 
-interface RiskDashboardViewProps {
-  setActiveView: (view: View) => void;
+interface Risk {
+  icon: string;
+  title: string;
+  summary: string;
+  mitigation: string[];
+  riskLevel: 'High' | 'Medium' | 'Low';
+  severity: 'High' | 'Medium' | 'Low';
 }
 
-const riskData = [
-  {
-    icon: BrainCircuit,
-    title: 'Model Risk',
-    summary: 'The risk of inaccurate or biased AI predictions leading to flawed, costly business decisions.',
-    mitigation: [
-      'Implement a rigorous, independent model validation process.',
-      'Continuously monitor for model drift and schedule regular retraining.',
-      'Conduct fairness audits to detect and correct algorithmic bias.',
-    ],
-    riskLevel: 'high',
-  },
-  {
-    icon: Users,
-    title: 'Implementation & Adoption Risk',
-    summary: 'The risk that the tool integrates poorly with our systems and that employees resist or fail to adopt it.',
-    mitigation: [
-      'Initiate a phased rollout, starting with a "champion" pilot group.',
-      'Develop comprehensive, hands-on training and support programs.',
-      'Ensure dedicated resources for integrating with legacy infrastructure.',
-    ],
-    riskLevel: 'medium',
-  },
-  {
-    icon: Shield,
-    title: 'Data Governance & Security Risk',
-    summary: 'The risk of data breaches, misuse of sensitive data, or non-compliance with privacy regulations (GDPR, CCPA).',
-    mitigation: [
-      'Enforce strict role-based access controls to sensitive data.',
-      'Ensure the platform is fully compliant with all relevant data privacy laws.',
-      'Conduct regular, independent security audits and penetration testing.',
-    ],
-    riskLevel: 'high',
-  },
-    {
-    icon: Cog,
-    title: 'Operational Risk',
-    summary: 'The risk of day-to-day failures, including system outages or over-reliance on vendor support.',
-    mitigation: [
-      'Establish clear Service Level Agreements (SLAs) with the vendor.',
-      'Develop documented procedures for handling system errors and downtime.',
-      'Ensure redundant systems are in place for critical functions.',
-    ],
-    riskLevel: 'medium',
-  },
-  {
-    icon: DollarSign,
-    title: 'Financial Risk',
-    summary: "The risk that the project's costs exceed budget and the promised ROI is not realized.",
-    mitigation: [
-      'Implement continuous ROI tracking against the initial business case.',
-      'Build contingency into the budget for unforeseen costs.',
-      'Establish clear "Go/No-Go" decision gates for future funding based on performance.',
-    ],
-    riskLevel: 'medium',
-  },
-];
+interface RiskDashboardViewProps {
+  setActiveView: (view: View) => void;
+  riskProfile: Risk[];
+}
+
+
+const iconMap: { [key: string]: React.ElementType } = {
+  brain: BrainCircuit,
+  people: Users,
+  shield: Shield,
+  cogs: Cog,
+  dollar: DollarSign,
+  megaphone: Megaphone
+};
 
 interface RiskCardProps {
-    icon: React.ElementType;
+    icon: string;
     title: string;
     summary: string;
     mitigation: string[];
-    riskLevel: 'high' | 'medium';
+    severity: 'High' | 'Medium' | 'Low';
 }
 
-const RiskCard: React.FC<RiskCardProps> = ({ icon: Icon, title, summary, mitigation, riskLevel }) => {
+const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigation, severity }) => {
+    const Icon = iconMap[icon] || Cog;
     return (
         <Card className={cn(
             "flex flex-col shadow-lg transition-transform duration-300 ease-in-out hover:scale-105",
             "border-l-4",
-            riskLevel === 'high' ? 'border-destructive' : 'border-yellow-500'
+            severity === 'High' ? 'border-destructive' : 'border-yellow-500'
         )}>
             <CardHeader>
                 <div className="flex items-center gap-4">
@@ -103,15 +66,15 @@ const RiskCard: React.FC<RiskCardProps> = ({ icon: Icon, title, summary, mitigat
     )
 }
 
-const RiskDashboardView: React.FC<RiskDashboardViewProps> = ({ setActiveView }) => {
+const RiskDashboardView: React.FC<RiskDashboardViewProps> = ({ setActiveView, riskProfile }) => {
   return (
     <div className="space-y-8 animate-fade-in">
         <div className="text-center">
             <h2 className="text-3xl font-bold tracking-tight text-primary">Ethical & Implementation Risk Dashboard</h2>
-            <p className="mt-2 text-lg text-muted-foreground">A qualitative analysis of key risk factors for our AI pilot programs.</p>
+            <p className="mt-2 text-lg text-muted-foreground">A qualitative analysis of key risk factors for the recommended pilot program.</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {riskData.map(risk => <RiskCard key={risk.title} {...risk} />)}
+            {riskProfile.map(risk => <RiskCard key={risk.title} {...risk} />)}
         </div>
          <div className="flex justify-center pt-4">
           <Button size="lg" onClick={() => setActiveView('The Verdict')}>

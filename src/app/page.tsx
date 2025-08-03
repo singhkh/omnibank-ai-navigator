@@ -69,11 +69,13 @@ export default function Home() {
             setActiveView={setActiveView}
             setIsPrioritizerCompleted={setIsPrioritizerCompleted}
             isPrioritizerCompleted={isPrioritizerCompleted}
+            setRiskProfile={setRiskProfile}
           />
         );
       case 'Risk Dashboard':
         return (
           <RiskDashboardView
+            riskProfile={riskProfile}
             setActiveView={setActiveView}
           />
         );
