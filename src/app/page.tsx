@@ -38,19 +38,12 @@ export default function Home() {
       case 'Risk Dashboard':
         return (
           <RiskDashboardView
-            tool={selectedTool}
-            roiAnalysis={roiAnalysis}
-            setRiskAssessment={setRiskAssessment}
             setActiveView={setActiveView}
           />
         );
       case 'The Verdict':
         return (
-          <TheVerdictView
-            tool={selectedTool}
-            roiAnalysis={roiAnalysis}
-            riskAssessment={riskAssessment}
-          />
+          <TheVerdictView />
         );
       default:
         return null;

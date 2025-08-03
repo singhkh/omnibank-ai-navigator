@@ -2,17 +2,12 @@
 
 import React from 'react';
 import type { View } from '../layout/navigation';
-import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { BrainCircuit, Users, Shield, Cog, DollarSign } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BrainCircuit, Users, Shield, Cog, DollarSign, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
 
 interface RiskDashboardViewProps {
-  tool: string | null;
-  roiAnalysis: AnalyzePilotProjectOutput | null;
-  setRiskAssessment: (assessment: string) => void;
   setActiveView: (view: View) => void;
 }
 
