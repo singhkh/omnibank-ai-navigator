@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Target, FlaskConical, Users, Castle } from 'lucide-react';
+import { Target, FlaskConical, Users, Castle, ArrowRight } from 'lucide-react';
 import RoadmapModal from '../common/RoadmapModal';
+import { Button } from '../ui/button';
 
 const JustificationCard = ({ icon: Icon, title, text }: { icon: React.ElementType, title: string, text: string }) => (
   <Card className="text-center shadow-lg transition-transform duration-300 ease-in-out hover:scale-105">
@@ -21,6 +22,7 @@ const JustificationCard = ({ icon: Icon, title, text }: { icon: React.ElementTyp
 
 
 const TheVerdictView: React.FC = () => {
+  const [showRoadmapModal, setShowRoadmapModal] = useState(false);
 
   const justifications = [
     {
@@ -47,38 +49,43 @@ const TheVerdictView: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-12 animate-fade-in">
-        {/* Section 1: The Final Recommendation */}
-        <div className="bg-primary text-primary-foreground rounded-lg shadow-2xl p-6 flex items-center justify-center gap-4">
-            <Target className="w-10 h-10" />
-            <h1 className="text-3xl font-bold tracking-wider uppercase">Recommendation: Strategic Pilot</h1>
-        </div>
+    <>
+      <div className="space-y-12 animate-fade-in">
+          {/* Section 1: The Final Recommendation */}
+          <div className="bg-primary text-primary-foreground rounded-lg shadow-2xl p-6 flex items-center justify-center gap-4">
+              <Target className="w-10 h-10" />
+              <h1 className="text-3xl font-bold tracking-wider uppercase">Recommendation: Strategic Pilot</h1>
+          </div>
 
-        {/* Section 2: The "Why" - Key Justifications */}
-        <section>
-            <h2 className="text-2xl font-bold text-center mb-8 text-primary">The "Why": Key Justifications</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {justifications.map(card => <JustificationCard key={card.title} {...card} />)}
-            </div>
-        </section>
+          {/* Section 2: The "Why" - Key Justifications */}
+          <section>
+              <h2 className="text-2xl font-bold text-center mb-8 text-primary">The "Why": Key Justifications</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {justifications.map(card => <JustificationCard key={card.title} {...card} />)}
+              </div>
+          </section>
 
-        {/* Section 3: The Path Forward - Next Steps */}
-        <section>
-          <Card className="max-w-3xl mx-auto shadow-lg">
-            <CardHeader>
-                <CardTitle className="text-2xl text-center font-headline">Proposed Next Steps</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                <ul className="list-decimal list-inside space-y-2 text-muted-foreground">
-                    {nextSteps.map((step, index) => <li key={index} className="text-base">{step}</li>)}
-                </ul>
-                <div className="text-center pt-6">
-                   <RoadmapModal />
-                </div>
-            </CardContent>
-          </Card>
-        </section>
-    </div>
+          {/* Section 3: The Path Forward - Next Steps */}
+          <section>
+            <Card className="max-w-3xl mx-auto shadow-lg">
+              <CardHeader>
+                  <CardTitle className="text-2xl text-center font-headline">Proposed Next Steps</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                  <ul className="list-decimal list-inside space-y-2 text-muted-foreground">
+                      {nextSteps.map((step, index) => <li key={index} className="text-base">{step}</li>)}
+                  </ul>
+                  <div className="text-center pt-6">
+                    <Button size="lg" onClick={() => setShowRoadmapModal(true)}>
+                        View Full Implementation Roadmap <ArrowRight className="ml-2" />
+                    </Button>
+                  </div>
+              </CardContent>
+            </Card>
+          </section>
+      </div>
+      <RoadmapModal open={showRoadmapModal} onOpenChange={setShowRoadmapModal} />
+    </>
   );
 };
 

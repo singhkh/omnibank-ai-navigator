@@ -6,10 +6,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Rocket, Target, Scaling, ArrowRight } from 'lucide-react';
+import { Rocket, Target, Scaling } from 'lucide-react';
 
 const roadmapData = [
     {
@@ -60,15 +58,14 @@ const roadmapData = [
     }
   ];
 
+interface RoadmapModalProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+}
 
-const RoadmapModal = () => {
+const RoadmapModal: React.FC<RoadmapModalProps> = ({ open, onOpenChange }) => {
     return (
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button size="lg">
-                    View Full Implementation Roadmap <ArrowRight className="ml-2" />
-                </Button>
-            </DialogTrigger>
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-w-4xl h-[90vh] flex flex-col">
                 <DialogHeader>
                     <DialogTitle className="text-2xl font-headline text-center">Strategic Pilot: Implementation Roadmap</DialogTitle>
