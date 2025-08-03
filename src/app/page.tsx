@@ -32,6 +32,7 @@ export default function Home() {
             setRoiAnalysis={setRoiAnalysis}
             setActiveView={setActiveView}
             setIsPrioritizerCompleted={setIsPrioritizerCompleted}
+            isPrioritizerCompleted={isPrioritizerCompleted}
           />
         );
       case 'Risk Dashboard':

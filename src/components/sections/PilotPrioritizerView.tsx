@@ -14,7 +14,7 @@ import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import type { View } from '../layout/navigation';
 import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
-import { Info } from 'lucide-react';
+import { Info, ArrowRight } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -27,6 +27,7 @@ interface PilotPrioritizerViewProps {
   setRoiAnalysis: (analysis: AnalyzePilotProjectOutput | null) => void;
   setActiveView: (view: View) => void;
   setIsPrioritizerCompleted: (isCompleted: boolean) => void;
+  isPrioritizerCompleted: boolean;
 }
 
 const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
@@ -34,6 +35,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   setRoiAnalysis,
   setActiveView,
   setIsPrioritizerCompleted,
+  isPrioritizerCompleted,
 }) => {
   const [customerImpact, setCustomerImpact] = useState([5]);
   const [customerRisk, setCustomerRisk] = useState([5]);
@@ -63,6 +65,10 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
     }
     setIsPrioritizerCompleted(true);
   };
+  
+  const handleNavigateToRisk = () => {
+    setActiveView('Risk Dashboard');
+  }
 
   return (
     <TooltipProvider>
@@ -244,10 +250,18 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
           <CardHeader>
             <CardTitle>Recommended Path:</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <p className="text-lg text-muted-foreground">
               {recommendationText}
             </p>
+            {isPrioritizerCompleted && (
+              <div className="flex justify-center pt-4">
+                <Button size="lg" onClick={handleNavigateToRisk}>
+                  View Full Risk Analysis & Verdict
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
