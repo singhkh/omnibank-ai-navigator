@@ -20,6 +20,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface RiskProfile {
     title: string;
@@ -55,6 +61,9 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
     setRecommendationText,
   ] = useState<string>('Awaiting Calculation...');
 
+  const customerScore = customerImpact[0] / (customerRisk[0] * customerRisk[0]);
+  const internalScore = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
+
   useEffect(() => {
     // Reset ROI analysis when view loads as it is no longer relevant
     // to the new comparison-based approach.
@@ -62,9 +71,6 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   }, [setRoiAnalysis]);
 
   const handleCalculate = () => {
-    const scoreA = customerImpact[0] / (customerRisk[0] * customerRisk[0]);
-    const scoreB = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
-    
     const internalRiskData = [
       { title: "Model Risk", icon: "brain", severity: "Medium" as const, summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.", mitigations: ["Human advisors act as a final validation layer.", "Continuously monitor model performance on internal data.", "Develop an internal 'AI Explainability' dashboard."] },
       { title: "Implementation & Adoption Risk", icon: "people", severity: "High" as const, summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.", mitigations: ["Launch an 'AI Champion' program with early adopters.", "Develop a robust training and change management plan.", "Clearly communicate that the tool is for augmentation, not replacement."] },
@@ -78,7 +84,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
     ];
 
 
-    if (scoreB >= scoreA) {
+    if (internalScore >= customerScore) {
       setRecommendationText(
         'Recommended Pilot: Internal Advisor-Assist Tool'
       );
@@ -114,68 +120,91 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
               <CardTitle className="font-headline">
                 Option A: Customer-Facing Bot
               </CardTitle>
+              <CardDescription>High-risk, high-reward public launch.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="impactA" className="font-semibold">
-                    Potential Financial Impact
-                  </Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">
-                        Estimate the <b>optimistic financial upside</b> of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    id="impactA"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={customerImpact}
-                    onValueChange={setCustomerImpact}
-                  />
-                  <span className="font-bold text-primary w-8 text-center">
-                    {customerImpact[0]}
-                  </span>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="riskA" className="font-semibold">
-                    Implementation Risk Score
-                  </Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">
-                        Estimate the <b>severe external risks</b> of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    id="riskA"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={customerRisk}
-                    onValueChange={setCustomerRisk}
-                  />
-                  <span className="font-bold text-destructive w-8 text-center">
-                    {customerRisk[0]}
-                  </span>
-                </div>
-              </div>
+            <CardContent className="space-y-1">
+               <Accordion type="multiple" className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-base font-semibold">
+                      <div className="flex items-center gap-2">
+                        <span>Financial Impact Model</span>
+                        <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{customerImpact[0]}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="impactA" className="font-semibold">
+                            Potential Financial Impact
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Estimate the <b>optimistic financial upside</b> of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Slider
+                            id="impactA"
+                            min={1}
+                            max={10}
+                            step={1}
+                            value={customerImpact}
+                            onValueChange={setCustomerImpact}
+                          />
+                           <span className="font-bold text-primary w-8 text-center">
+                            {customerImpact[0]}
+                          </span>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger className="text-base font-semibold">
+                      <div className="flex items-center gap-2">
+                        <span>Implementation Risk Model</span>
+                         <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{customerRisk[0]}</span>
+                      </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="riskA" className="font-semibold">
+                            Implementation Risk Score
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Estimate the <b>severe external risks</b> of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Slider
+                            id="riskA"
+                            min={1}
+                            max={10}
+                            step={1}
+                            value={customerRisk}
+                            onValueChange={setCustomerRisk}
+                          />
+                          <span className="font-bold text-destructive w-8 text-center">
+                            {customerRisk[0]}
+                          </span>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
             </CardContent>
           </Card>
 
@@ -185,68 +214,91 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
               <CardTitle className="font-headline">
                 Option B: Internal Advisor-Assist
               </CardTitle>
+              <CardDescription>Low-risk, high-impact internal launch.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="impactB" className="font-semibold">
-                    Potential Financial Impact
-                  </Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">
-                        Estimate the <b>pragmatic financial upside</b> of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    id="impactB"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={internalImpact}
-                    onValueChange={setInternalImpact}
-                  />
-                  <span className="font-bold text-primary w-8 text-center">
-                    {internalImpact[0]}
-                  </span>
-                </div>
-              </div>
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <Label htmlFor="riskB" className="font-semibold">
-                    Implementation Risk Score
-                  </Label>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p className="max-w-xs">
-                        Estimate the <b>contained internal risks</b> of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
-                <div className="flex items-center gap-4">
-                  <Slider
-                    id="riskB"
-                    min={1}
-                    max={10}
-                    step={1}
-                    value={internalRisk}
-                    onValueChange={setInternalRisk}
-                  />
-                  <span className="font-bold text-destructive w-8 text-center">
-                    {internalRisk[0]}
-                  </span>
-                </div>
-              </div>
+            <CardContent className="space-y-1">
+               <Accordion type="multiple" className="w-full">
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="text-base font-semibold">
+                       <div className="flex items-center gap-2">
+                          <span>Financial Impact Model</span>
+                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{internalImpact[0]}</span>
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="impactB" className="font-semibold">
+                            Potential Financial Impact
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Estimate the <b>pragmatic financial upside</b> of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Slider
+                            id="impactB"
+                            min={1}
+                            max={10}
+                            step={1}
+                            value={internalImpact}
+                            onValueChange={setInternalImpact}
+                          />
+                          <span className="font-bold text-primary w-8 text-center">
+                            {internalImpact[0]}
+                          </span>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="item-2">
+                    <AccordionTrigger className="text-base font-semibold">
+                      <div className="flex items-center gap-2">
+                          <span>Implementation Risk Model</span>
+                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{internalRisk[0]}</span>
+                        </div>
+                    </AccordionTrigger>
+                    <AccordionContent className="pt-4">
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-2">
+                          <Label htmlFor="riskB" className="font-semibold">
+                            Implementation Risk Score
+                          </Label>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p className="max-w-xs">
+                                Estimate the <b>contained internal risks</b> of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)
+                              </p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <Slider
+                            id="riskB"
+                            min={1}
+                            max={10}
+                            step={1}
+                            value={internalRisk}
+                            onValueChange={setInternalRisk}
+                          />
+                          <span className="font-bold text-destructive w-8 text-center">
+                            {internalRisk[0]}
+                          </span>
+                        </div>
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
             </CardContent>
           </Card>
         </div>
@@ -279,3 +331,5 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
 };
 
 export default PilotPrioritizerView;
+
+    
