@@ -26,12 +26,14 @@ interface PilotPrioritizerViewProps {
   tool: string | null;
   setRoiAnalysis: (analysis: AnalyzePilotProjectOutput | null) => void;
   setActiveView: (view: View) => void;
+  setIsPrioritizerCompleted: (isCompleted: boolean) => void;
 }
 
 const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   tool,
   setRoiAnalysis,
   setActiveView,
+  setIsPrioritizerCompleted,
 }) => {
   const [customerImpact, setCustomerImpact] = useState([5]);
   const [customerRisk, setCustomerRisk] = useState([5]);

@@ -14,6 +14,7 @@ export default function Home() {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [roiAnalysis, setRoiAnalysis] = useState<AnalyzePilotProjectOutput | null>(null);
   const [riskAssessment, setRiskAssessment] = useState<string | null>(null);
+  const [isPrioritizerCompleted, setIsPrioritizerCompleted] = useState(false);
 
   // For simplicity, we'll enable all views after the first step.
   // In a real scenario, this would be driven by completion of each step.
@@ -36,6 +37,7 @@ export default function Home() {
             tool={selectedTool}
             setRoiAnalysis={setRoiAnalysis}
             setActiveView={setActiveView}
+            setIsPrioritizerCompleted={setIsPrioritizerCompleted}
           />
         );
       case 'Risk Dashboard':
