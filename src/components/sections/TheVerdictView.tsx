@@ -15,8 +15,8 @@ interface TheVerdictViewProps {
 const TheVerdictView: React.FC<TheVerdictViewProps> = ({ tool, roiAnalysis, riskAssessment }) => {
   const overallScore = roiAnalysis ? Math.round((roiAnalysis.opportunityScore * 0.7) + ((100 - roiAnalysis.riskScore) * 0.3)) : 0;
 
-  if (!tool || !roiAnalysis || !riskAssessment) {
-    return (
+  if (!riskAssessment) {
+     return (
       <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-headline">The Verdict</CardTitle>
@@ -28,7 +28,7 @@ const TheVerdictView: React.FC<TheVerdictViewProps> = ({ tool, roiAnalysis, risk
                 <Card className="bg-secondary/50 border-primary border-l-4">
                     <CardContent className="pt-6">
                     <p className="text-lg">
-                        Please complete all previous steps to see the final verdict.
+                        Please generate a risk assessment on the "Risk Dashboard" page to see the final verdict.
                     </p>
                     </CardContent>
                 </Card>
@@ -42,7 +42,7 @@ const TheVerdictView: React.FC<TheVerdictViewProps> = ({ tool, roiAnalysis, risk
   return (
     <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
       <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-headline">The Verdict: AI Pilot for "{tool}"</CardTitle>
+        <CardTitle className="text-3xl font-headline">The Verdict: AI Pilot for "{tool || 'the Recommended Pilot'}"</CardTitle>
         <CardDescription>A comprehensive summary of the analysis.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-8">
@@ -51,36 +51,13 @@ const TheVerdictView: React.FC<TheVerdictViewProps> = ({ tool, roiAnalysis, risk
           <Card className="bg-secondary/50 border-primary border-l-4">
              <CardContent className="pt-6">
               <p className="text-lg">
-                Based on the analysis, implementing <strong>{tool}</strong> presents a strong opportunity with a calculated overall score of <strong>{overallScore}/100</strong>.
+                Based on the analysis, implementing <strong>{tool || 'the recommended pilot'}</strong> presents a strong opportunity.
                 The project demonstrates significant potential benefits that appear to outweigh the identified risks. Proceeding with a pilot is recommended, with careful attention to the mitigation strategies outlined in the risk assessment.
               </p>
              </CardContent>
           </Card>
         </section>
-
-        <Separator />
         
-        <section className="space-y-4">
-          <h3 className="text-xl font-semibold text-primary">ROI & Potential Analysis</h3>
-          <p className="text-muted-foreground">{roiAnalysis.roiAssessment}</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-            <div>
-              <h4 className="font-semibold mb-2">Opportunity Score</h4>
-              <div className="flex items-center gap-4">
-                <Progress value={roiAnalysis.opportunityScore} className="w-full" />
-                <span className="font-bold text-lg text-primary">{roiAnalysis.opportunityScore}</span>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold mb-2">Risk Score</h4>
-              <div className="flex items-center gap-4">
-                <Progress value={roiAnalysis.riskScore} className="w-full [&>div]:bg-destructive" />
-                <span className="font-bold text-lg text-destructive">{roiAnalysis.riskScore}</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <Separator />
 
         <section className="space-y-4">

@@ -47,26 +47,13 @@ const RiskDashboardView: React.FC<RiskDashboardViewProps> = ({ tool, roiAnalysis
     return 'warning';
   };
 
-  if (!tool || !roiAnalysis) {
-    return (
-      <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
-        <CardHeader>
-          <CardTitle>Risk Dashboard</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Please complete the AI Landscape and Pilot Prioritizer steps first.</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   const handleGenerateAssessment = async () => {
     setIsLoading(true);
     setAssessmentResult(null);
     try {
       const result = await generateRiskAssessment({
-        aiTool: tool,
-        roiAnalysis: roiAnalysis.roiAssessment,
+        aiTool: tool || 'the recommended pilot',
+        roiAnalysis: roiAnalysis?.roiAssessment || 'Analysis based on user input.',
       });
       setAssessmentResult(result.riskAssessment);
       setRiskAssessment(result.riskAssessment);
@@ -115,12 +102,12 @@ const RiskDashboardView: React.FC<RiskDashboardViewProps> = ({ tool, roiAnalysis
       <Card className="max-w-4xl mx-auto shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Pilot-Specific Risk Assessment</CardTitle>
-          <CardDescription>Generate a detailed risk assessment for the selected AI pilot project.</CardDescription>
+          <CardDescription>Generate a detailed risk assessment for the recommended AI pilot project.</CardDescription>
         </CardHeader>
         <CardContent>
           {!assessmentResult && (
             <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg">
-              <h3 className="text-lg font-semibold">Ready to assess risks for "{tool}"?</h3>
+              <h3 className="text-lg font-semibold">Ready to assess risks for the recommended pilot?</h3>
               <p className="text-muted-foreground mb-4">Click the button below to generate the AI-powered risk assessment.</p>
               <Button onClick={handleGenerateAssessment} disabled={isLoading} size="lg">
                 {isLoading ? (
