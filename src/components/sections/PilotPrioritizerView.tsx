@@ -19,11 +19,11 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   setRoiAnalysis,
   setActiveView,
 }) => {
-  const [impactA, setImpactA] = useState([5]);
-  const [riskA, setRiskA] = useState([7]);
-  const [impactB, setImpactB] = useState([4]);
-  const [riskB, setRiskB] = useState([3]);
-  const [recommendation, setRecommendation] = useState<string>('Please calculate a recommendation.');
+  const [customerImpact, setCustomerImpact] = useState([5]);
+  const [customerRisk, setCustomerRisk] = useState([5]);
+  const [internalImpact, setInternalImpact] = useState([5]);
+  const [internalRisk, setInternalRisk] = useState([5]);
+  const [recommendationText, setRecommendationText] = useState<string>('Awaiting Calculation...');
 
   useEffect(() => {
     // Reset ROI analysis when view loads as it is no longer relevant
@@ -32,19 +32,19 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   }, [setRoiAnalysis]);
 
   const handleCalculate = () => {
-    const scoreA = impactA[0] * 2 - riskA[0];
-    const scoreB = impactB[0] * 2 - riskB[0];
+    const scoreA = customerImpact[0] * 2 - customerRisk[0];
+    const scoreB = internalImpact[0] * 2 - internalRisk[0];
 
     if (scoreA > scoreB) {
-      setRecommendation(
+      setRecommendationText(
         'Option A: Customer-Facing Bot is recommended. It has a higher potential impact relative to its implementation risk.'
       );
     } else if (scoreB > scoreA) {
-      setRecommendation(
+      setRecommendationText(
         'Option B: Internal Advisor-Assist is recommended. It provides a more balanced risk/reward profile and is a safer initial investment.'
       );
     } else {
-      setRecommendation(
+      setRecommendationText(
         'Both options present a similar risk/reward profile. Further analysis is needed to differentiate them.'
       );
     }
@@ -69,15 +69,15 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
             <div className="space-y-3">
               <Label htmlFor="impactA" className="font-semibold">Potential Financial Impact</Label>
               <div className="flex items-center gap-4">
-                <Slider id="impactA" min={1} max={10} step={1} value={impactA} onValueChange={setImpactA} />
-                <span className="font-bold text-primary w-8 text-center">{impactA[0]}</span>
+                <Slider id="impactA" min={1} max={10} step={1} value={customerImpact} onValueChange={setCustomerImpact} />
+                <span className="font-bold text-primary w-8 text-center">{customerImpact[0]}</span>
               </div>
             </div>
             <div className="space-y-3">
               <Label htmlFor="riskA" className="font-semibold">Implementation Risk Score</Label>
                <div className="flex items-center gap-4">
-                <Slider id="riskA" min={1} max={10} step={1} value={riskA} onValueChange={setRiskA} />
-                <span className="font-bold text-destructive w-8 text-center">{riskA[0]}</span>
+                <Slider id="riskA" min={1} max={10} step={1} value={customerRisk} onValueChange={setCustomerRisk} />
+                <span className="font-bold text-destructive w-8 text-center">{customerRisk[0]}</span>
               </div>
             </div>
           </CardContent>
@@ -92,15 +92,15 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
             <div className="space-y-3">
               <Label htmlFor="impactB" className="font-semibold">Potential Financial Impact</Label>
               <div className="flex items-center gap-4">
-                <Slider id="impactB" min={1} max={10} step={1} value={impactB} onValueChange={setImpactB} />
-                <span className="font-bold text-primary w-8 text-center">{impactB[0]}</span>
+                <Slider id="impactB" min={1} max={10} step={1} value={internalImpact} onValueChange={setInternalImpact} />
+                <span className="font-bold text-primary w-8 text-center">{internalImpact[0]}</span>
               </div>
             </div>
             <div className="space-y-3">
               <Label htmlFor="riskB" className="font-semibold">Implementation Risk Score</Label>
               <div className="flex items-center gap-4">
-                <Slider id="riskB" min={1} max={10} step={1} value={riskB} onValueChange={setRiskB} />
-                <span className="font-bold text-destructive w-8 text-center">{riskB[0]}</span>
+                <Slider id="riskB" min={1} max={10} step={1} value={internalRisk} onValueChange={setInternalRisk} />
+                <span className="font-bold text-destructive w-8 text-center">{internalRisk[0]}</span>
               </div>
             </div>
           </CardContent>
@@ -118,7 +118,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
             <CardTitle>Recommended Path:</CardTitle>
         </CardHeader>
         <CardContent>
-            <p className="text-lg text-muted-foreground">{recommendation}</p>
+            <p className="text-lg text-muted-foreground">{recommendationText}</p>
         </CardContent>
       </Card>
 
