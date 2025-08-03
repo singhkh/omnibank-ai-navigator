@@ -53,7 +53,7 @@ const getDynamicSummary = (id: string, value: number, baseSummary: string): stri
         High: "HIGH RISK: "
     }[severity];
     
-    if (id === 'adoption_risk' || id === 'reputation_risk') {
+    if (id === 'adoption_risk' || id === 'reputation_risk' || id === 'model_bias' || id === 'security_risk') {
          if (severity === "High") return `CRITICAL RISK: ${baseSummary}`;
     }
 
@@ -90,7 +90,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const [
     recommendationText,
     setRecommendationText,
-  ] = useState<string>('Awaiting Calculation...');
+  ] = useState<string>('');
 
   // Derived scores
   const customerImpact = customerNewRevenue[0] + customerRetentionBoost[0] + customerBrandEnhancement[0];
@@ -103,10 +103,12 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const internalScore = internalRisk > 0 ? internalImpact / (internalRisk * internalRisk) : internalImpact;
 
   useEffect(() => {
-    // Reset ROI analysis when view loads as it is no longer relevant
-    // to the new comparison-based approach.
+    // Reset ROI analysis and completion state when view loads
+    // as it is no longer relevant to the new comparison-based approach.
     setRoiAnalysis(null);
-  }, [setRoiAnalysis]);
+    setIsPrioritizerCompleted(false);
+    setRecommendationText('');
+  }, [setRoiAnalysis, setIsPrioritizerCompleted]);
 
   const handleCalculate = () => {
     let newRiskProfile: Risk[];
@@ -191,7 +193,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
               <CardDescription>High-risk, high-reward public launch.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
-               <Accordion type="multiple" className="w-full">
+               <Accordion type="multiple" className="w-full" defaultValue={['item-1']}>
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
@@ -217,6 +219,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={customerNewRevenue}
                                     onValueChange={setCustomerNewRevenue}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {customerNewRevenue[0]}%
@@ -232,6 +235,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={customerRetentionBoost}
                                     onValueChange={setCustomerRetentionBoost}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {customerRetentionBoost[0]}%
@@ -247,6 +251,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={customerBrandEnhancement}
                                     onValueChange={setCustomerBrandEnhancement}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {customerBrandEnhancement[0]}
@@ -274,21 +279,21 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                       <div className="space-y-3">
                           <Label>Model Risk & Bias</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={customerModelRisk} onValueChange={setCustomerModelRisk} />
+                              <Slider min={1} max={10} step={1} value={customerModelRisk} onValueChange={setCustomerModelRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{customerModelRisk[0]}</span>
                           </div>
                       </div>
                       <div className="space-y-3">
                           <Label>Data Privacy & Security Risk</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={customerSecurityRisk} onValueChange={setCustomerSecurityRisk} />
+                              <Slider min={1} max={10} step={1} value={customerSecurityRisk} onValueChange={setCustomerSecurityRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{customerSecurityRisk[0]}</span>
                           </div>
                       </div>
                       <div className="space-y-3">
                           <Label>Reputational & Trust Risk</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={customerReputationRisk} onValueChange={setCustomerReputationRisk} />
+                              <Slider min={1} max={10} step={1} value={customerReputationRisk} onValueChange={setCustomerReputationRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{customerReputationRisk[0]}</span>
                           </div>
                       </div>
@@ -307,7 +312,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
               <CardDescription>Low-risk, high-impact internal launch.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-1">
-               <Accordion type="multiple" className="w-full">
+               <Accordion type="multiple" className="w-full" defaultValue={['item-1']}>
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base font-semibold">
                        <div className="flex items-center gap-2">
@@ -333,6 +338,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={internalNewRevenue}
                                     onValueChange={setInternalNewRevenue}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {internalNewRevenue[0]}%
@@ -348,6 +354,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={internalRetentionBoost}
                                     onValueChange={setInternalRetentionBoost}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {internalRetentionBoost[0]}%
@@ -363,6 +370,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                     step={1}
                                     value={internalBrandEnhancement}
                                     onValueChange={setInternalBrandEnhancement}
+                                    disabled={isPrioritizerCompleted}
                                 />
                                <span className="font-bold text-primary w-12 text-center">
                                 {internalBrandEnhancement[0]}
@@ -390,21 +398,21 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                        <div className="space-y-3">
                           <Label>Model Risk</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={internalModelRisk} onValueChange={setInternalModelRisk} />
+                              <Slider min={1} max={10} step={1} value={internalModelRisk} onValueChange={setInternalModelRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{internalModelRisk[0]}</span>
                           </div>
                       </div>
                       <div className="space-y-3">
                           <Label>Implementation & Adoption Risk</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={internalAdoptionRisk} onValueChange={setInternalAdoptionRisk} />
+                              <Slider min={1} max={10} step={1} value={internalAdoptionRisk} onValueChange={setInternalAdoptionRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{internalAdoptionRisk[0]}</span>
                           </div>
                       </div>
                       <div className="space-y-3">
                           <Label>Data Governance & Security Risk</Label>
                           <div className="flex items-center gap-4">
-                              <Slider min={1} max={10} step={1} value={internalDataRisk} onValueChange={setInternalDataRisk} />
+                              <Slider min={1} max={10} step={1} value={internalDataRisk} onValueChange={setInternalDataRisk} disabled={isPrioritizerCompleted} />
                               <span className="font-bold text-destructive w-8 text-center">{internalDataRisk[0]}</span>
                           </div>
                       </div>
