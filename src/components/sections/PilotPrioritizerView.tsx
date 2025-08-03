@@ -88,7 +88,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
             <div className="space-y-3">
               <Label htmlFor="impactB" className="font-semibold">Potential Financial Impact</Label>
               <div className="flex items-center gap-4">
-                <Slider id="impactB" min={1} max={10} step={1} value={internalImpact} onValueeChange={setInternalImpact} />
+                <Slider id="impactB" min={1} max={10} step={1} value={internalImpact} onValueChange={setInternalImpact} />
                 <span className="font-bold text-primary w-8 text-center">{internalImpact[0]}</span>
               </div>
             </div>
