@@ -15,6 +15,42 @@ export default function Home() {
   const [roiAnalysis, setRoiAnalysis] = useState<AnalyzePilotProjectOutput | null>(null);
   const [riskAssessment, setRiskAssessment] = useState<string | null>(null);
   const [isPrioritizerCompleted, setIsPrioritizerCompleted] = useState(false);
+  const [riskProfile, setRiskProfile] = useState([
+    {
+      title: "Model Risk",
+      icon: "brain",
+      severity: "Medium", // Can be "High", "Medium", or "Low"
+      summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.",
+      mitigations: [
+        "Human advisors act as a final validation layer.",
+        "Continuously monitor model performance on internal data.",
+        "Develop an internal 'AI Explainability' dashboard."
+      ]
+    },
+    {
+      title: "Implementation & Adoption Risk",
+      icon: "people",
+      severity: "High",
+      summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.",
+      mitigations: [
+        "Launch an 'AI Champion' program with early adopters.",
+        "Develop a robust training and change management plan.",
+        "Clearly communicate that the tool is for augmentation, not replacement."
+      ]
+    },
+    {
+      title: "Data Governance & Security Risk",
+      icon: "shield",
+      severity: "Medium",
+      summary: "Risk of internal data misuse. Less severe than a public breach but still significant.",
+      mitigations: [
+        "Enforce strict role-based access controls within the bank.",
+        "Audit all data access logs.",
+        "All data remains within OmniBank's secure infrastructure."
+      ]
+    }
+  ]);
+
 
   const renderContent = () => {
     switch (activeView) {
