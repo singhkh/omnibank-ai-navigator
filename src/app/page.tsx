@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState } from 'react';
 import Header from '@/components/layout/header';
 import Navigation, { type View } from '@/components/layout/navigation';
 import AiLandscapeView from '@/components/sections/AiLandscapeView';
@@ -13,13 +13,12 @@ export default function Home() {
   const [activeView, setActiveView] = useState<View>('AI Landscape');
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [roiAnalysis, setRoiAnalysis] = useState<AnalyzePilotProjectOutput | null>(null);
-  const [riskAssessment, setRiskAssessment] = useState<string | null>(null);
   const [isPrioritizerCompleted, setIsPrioritizerCompleted] = useState(false);
   const [riskProfile, setRiskProfile] = useState([
     {
       title: "Model Risk",
       icon: "brain",
-      severity: "Medium", // Can be "High", "Medium", or "Low"
+      severity: "Medium" as const, // Can be "High", "Medium", or "Low"
       summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.",
       mitigations: [
         "Human advisors act as a final validation layer.",
@@ -30,7 +29,7 @@ export default function Home() {
     {
       title: "Implementation & Adoption Risk",
       icon: "people",
-      severity: "High",
+      severity: "High" as const,
       summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.",
       mitigations: [
         "Launch an 'AI Champion' program with early adopters.",
@@ -41,7 +40,7 @@ export default function Home() {
     {
       title: "Data Governance & Security Risk",
       icon: "shield",
-      severity: "Medium",
+      severity: "Medium" as const,
       summary: "Risk of internal data misuse. Less severe than a public breach but still significant.",
       mitigations: [
         "Enforce strict role-based access controls within the bank.",
@@ -89,7 +88,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       <Header />
       <Navigation 
         activeView={activeView} 

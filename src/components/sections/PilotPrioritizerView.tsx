@@ -8,13 +8,12 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import type { View } from '../layout/navigation';
 import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
-import { Info, ArrowRight, Megaphone } from 'lucide-react';
+import { Info, ArrowRight } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -67,15 +66,15 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
     const scoreB = internalImpact[0] / (internalRisk[0] * internalRisk[0]);
     
     const internalRiskData = [
-      { title: "Model Risk", icon: "brain", severity: "Medium", summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.", mitigations: ["Human advisors act as a final validation layer.", "Continuously monitor model performance on internal data.", "Develop an internal 'AI Explainability' dashboard."] },
-      { title: "Implementation & Adoption Risk", icon: "people", severity: "High", summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.", mitigations: ["Launch an 'AI Champion' program with early adopters.", "Develop a robust training and change management plan.", "Clearly communicate that the tool is for augmentation, not replacement."] },
-      { title: "Data Governance & Security Risk", icon: "shield", severity: "Medium", summary: "Risk of internal data misuse. Less severe than a public breach but still significant.", mitigations: ["Enforce strict role-based access controls within the bank.", "Audit all data access logs.", "All data remains within OmniBank's secure infrastructure."] }
+      { title: "Model Risk", icon: "brain", severity: "Medium" as const, summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.", mitigations: ["Human advisors act as a final validation layer.", "Continuously monitor model performance on internal data.", "Develop an internal 'AI Explainability' dashboard."] },
+      { title: "Implementation & Adoption Risk", icon: "people", severity: "High" as const, summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.", mitigations: ["Launch an 'AI Champion' program with early adopters.", "Develop a robust training and change management plan.", "Clearly communicate that the tool is for augmentation, not replacement."] },
+      { title: "Data Governance & Security Risk", icon: "shield", severity: "Medium" as const, summary: "Risk of internal data misuse. Less severe than a public breach but still significant.", mitigations: ["Enforce strict role-based access controls within the bank.", "Audit all data access logs.", "All data remains within OmniBank's secure infrastructure."] }
     ];
 
     const customerRiskData = [
-      { title: "Model Risk & Bias", icon: "brain", severity: "High", summary: "CATACROPHIC RISK of biased advice causing direct customer harm and regulatory fines.", mitigations: ["Requires third-party ethical AI audits before launch.", "Implement complex bias detection algorithms.", "Extensive 'red team' testing for harmful outputs."] },
-      { title: "Data Privacy & Security Risk", icon: "shield", severity: "High", summary: "Massive risk of a public data breach of sensitive customer financial data, leading to lawsuits.", mitigations: ["Requires end-to-end post-quantum cryptography.", "Full compliance with GDPR, CCPA, and the AI Act.", "Significant investment in cybersecurity infrastructure."] },
-      { title: "Reputational & Trust Risk", icon: "megaphone", severity: "High", summary: "A single instance of a 'hallucinated' or harmful answer going viral could destroy customer trust.", mitigations: ["Implement a multi-layered content moderation system.", "Extensive PR and crisis communication plan required.", "Limit initial launch to a small, opt-in beta group."] }
+      { title: "Model Risk & Bias", icon: "brain", severity: "High" as const, summary: "CATACROPHIC RISK of biased advice causing direct customer harm and regulatory fines.", mitigations: ["Requires third-party ethical AI audits before launch.", "Implement complex bias detection algorithms.", "Extensive 'red team' testing for harmful outputs."] },
+      { title: "Data Privacy & Security Risk", icon: "shield", severity: "High" as const, summary: "Massive risk of a public data breach of sensitive customer financial data, leading to lawsuits.", mitigations: ["Requires end-to-end post-quantum cryptography.", "Full compliance with GDPR, CCPA, and the AI Act.", "Significant investment in cybersecurity infrastructure."] },
+      { title: "Reputational & Trust Risk", icon: "megaphone", severity: "High" as const, summary: "A single instance of a 'hallucinated' or harmful answer going viral could destroy customer trust.", mitigations: ["Implement a multi-layered content moderation system.", "Extensive PR and crisis communication plan required.", "Limit initial launch to a small, opt-in beta group."] }
     ];
 
 
@@ -128,10 +127,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">
-                        Estimate the overall financial upside on a scale of 1-10.
-                        Consider factors like new customer acquisition, increased
-                        cross-selling, and brand enhancement. High numbers
-                        represent a highly optimistic market reception.
+                        Estimate the <b>optimistic financial upside</b> of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -161,10 +157,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">
-                        Estimate the combined risk on a scale of 1-10. Consider
-                        regulatory fines from the CFPB, reputational damage from
-                        biased advice, and technical failure (hallucinations).
-                        High numbers represent a severe risk profile.
+                        Estimate the <b>severe external risks</b> of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -205,10 +198,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">
-                        Estimate the financial upside on a scale of 1-10.
-                        Consider factors like improved advisor efficiency,
-                        better compliance audit results, and the strategic value
-                        of building a proprietary AI model safely.
+                        Estimate the <b>pragmatic financial upside</b> of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -238,11 +228,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">
-                        Estimate the combined risk on a scale of 1-10. The
-                        primary risk here is internal: low employee adoption and
-                        the challenges of retraining. Technical and regulatory
-                        risks are significantly more contained than in a public
-                        launch.
+                        Estimate the <b>contained internal risks</b> of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -266,29 +252,27 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
         </div>
 
         <div className="mt-8 flex justify-center">
-          <Button size="lg" onClick={handleCalculate}>
+          <Button size="lg" onClick={handleCalculate} disabled={isPrioritizerCompleted}>
             Calculate Recommendation
           </Button>
         </div>
-
-        <Card className="max-w-4xl mx-auto shadow-lg mt-8">
-          <CardHeader>
-            <CardTitle>Recommended Path:</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-lg text-muted-foreground">
-              {recommendationText}
-            </p>
-            {isPrioritizerCompleted && (
-              <div className="flex justify-center pt-4">
+        
+        {isPrioritizerCompleted && (
+          <Card className="max-w-4xl mx-auto shadow-lg mt-8 bg-secondary border-primary border-2 animate-fade-in">
+            <CardHeader>
+              <CardTitle className="text-center text-primary">Recommendation Calculated!</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 text-center">
+              <p className="text-lg font-semibold text-primary">
+                {recommendationText}
+              </p>
                 <Button size="lg" onClick={handleNavigateToRisk}>
                   View Full Risk Analysis & Verdict
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </TooltipProvider>
   );
