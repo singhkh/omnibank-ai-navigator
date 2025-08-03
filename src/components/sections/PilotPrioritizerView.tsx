@@ -167,6 +167,14 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="max-w-xs">Estimate the **optimistic financial upside** of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)</p>
+                          </TooltipContent>
+                        </Tooltip>
                         <span>Financial Impact Model</span>
                         <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{customerImpact.toFixed(0)}</span>
                       </div>
@@ -222,6 +230,14 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                   <AccordionItem value="item-2">
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p className="max-w-xs">Estimate the **severe external risks** of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)</p>
+                            </TooltipContent>
+                        </Tooltip>
                         <span>Implementation Risk Model</span>
                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{customerRisk.toFixed(1)}</span>
                       </div>
@@ -267,6 +283,14 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                   <AccordionItem value="item-1">
                     <AccordionTrigger className="text-base font-semibold">
                        <div className="flex items-center gap-2">
+                          <Tooltip>
+                              <TooltipTrigger asChild>
+                                  <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                  <p className="max-w-xs">Estimate the **pragmatic financial upside** of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)</p>
+                              </TooltipContent>
+                          </Tooltip>
                           <span>Financial Impact Model</span>
                           <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-primary/10 text-primary">{internalImpact.toFixed(0)}</span>
                         </div>
@@ -322,6 +346,14 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                   <AccordionItem value="item-2">
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
+                          <Tooltip>
+                              <TooltipTrigger asChild>
+                                  <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                  <p className="max-w-xs">Estimate the **contained internal risks** of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)</p>
+                              </TooltipContent>
+                          </Tooltip>
                           <span>Implementation Risk Model</span>
                           <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{internalRisk.toFixed(1)}</span>
                         </div>
@@ -383,3 +415,5 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
 };
 
 export default PilotPrioritizerView;
+
+    
