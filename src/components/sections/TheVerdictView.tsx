@@ -13,20 +13,31 @@ interface TheVerdictViewProps {
 }
 
 const TheVerdictView: React.FC<TheVerdictViewProps> = ({ tool, roiAnalysis, riskAssessment }) => {
+  const overallScore = roiAnalysis ? Math.round((roiAnalysis.opportunityScore * 0.7) + ((100 - roiAnalysis.riskScore) * 0.3)) : 0;
+
   if (!tool || !roiAnalysis || !riskAssessment) {
     return (
       <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
-        <CardHeader>
-          <CardTitle>The Verdict</CardTitle>
+        <CardHeader className="text-center">
+          <CardTitle className="text-3xl font-headline">The Verdict</CardTitle>
+          <CardDescription>A comprehensive summary of the analysis.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <p>Please complete all previous steps to see the final verdict.</p>
+        <CardContent className="space-y-8">
+            <section>
+                <h3 className="text-xl font-semibold mb-4 text-primary">Final Recommendation</h3>
+                <Card className="bg-secondary/50 border-primary border-l-4">
+                    <CardContent className="pt-6">
+                    <p className="text-lg">
+                        Please complete all previous steps to see the final verdict.
+                    </p>
+                    </CardContent>
+                </Card>
+            </section>
         </CardContent>
       </Card>
     );
   }
 
-  const overallScore = Math.round((roiAnalysis.opportunityScore * 0.7) + ((100 - roiAnalysis.riskScore) * 0.3));
 
   return (
     <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
