@@ -6,14 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { BrainCircuit, Users, Shield, Cog, DollarSign, ArrowRight, Megaphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
-
-interface Risk {
-  title: string;
-  icon: string;
-  severity: "High" | "Medium" | "Low";
-  summary: string;
-  mitigations: string[];
-}
+import type { Risk, RiskSeverity } from '@/app/page';
 
 interface RiskDashboardViewProps {
   setActiveView: (view: View) => void;
@@ -35,7 +28,7 @@ interface RiskCardProps {
     title: string;
     summary: string;
     mitigations: string[];
-    severity: 'High' | 'Medium' | 'Low';
+    severity: RiskSeverity;
 }
 
 const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigations, severity }) => {
@@ -53,7 +46,7 @@ const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigations, 
                 </div>
             </CardHeader>
             <CardContent className="flex flex-col flex-grow space-y-4">
-                <p className="text-muted-foreground">{summary}</p>
+                <p className="text-muted-foreground font-semibold">{summary}</p>
                 <div>
                     <h4 className="font-semibold mb-2">Mitigation Strategies:</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
@@ -66,6 +59,19 @@ const RiskCard: React.FC<RiskCardProps> = ({ icon, title, summary, mitigations, 
 }
 
 const RiskDashboardView: React.FC<RiskDashboardViewProps> = ({ setActiveView, riskProfile }) => {
+  if (riskProfile.length === 0) {
+    return (
+       <Card className="max-w-4xl mx-auto shadow-lg animate-fade-in">
+        <CardHeader>
+          <CardTitle className="text-center">Risk Dashboard</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-muted-foreground">Please complete the Pilot Prioritizer to generate a risk assessment.</p>
+        </CardContent>
+      </Card>
+    )
+  }
+  
   return (
     <div className="space-y-8 animate-fade-in">
         <div className="text-center">

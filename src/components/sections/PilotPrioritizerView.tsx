@@ -25,15 +25,10 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion"
+} from "@/components/ui/accordion";
+import type { Risk, RiskSeverity } from '@/app/page';
+import { riskTemplate } from '@/app/page';
 
-interface RiskProfile {
-    title: string;
-    icon: string;
-    severity: "High" | "Medium" | "Low";
-    summary: string;
-    mitigations: string[];
-}
 
 interface PilotPrioritizerViewProps {
   tool: string | null;
@@ -41,8 +36,24 @@ interface PilotPrioritizerViewProps {
   setActiveView: (view: View) => void;
   setIsPrioritizerCompleted: (isCompleted: boolean) => void;
   isPrioritizerCompleted: boolean;
-  setRiskProfile: (profile: RiskProfile[]) => void;
+  setRiskProfile: (profile: Risk[]) => void;
 }
+
+const sliderToSeverity = (value: number): RiskSeverity => {
+  if (value <= 3) return "Low";
+  if (value <= 7) return "Medium";
+  return "High";
+};
+
+const severityToSummary = (severity: RiskSeverity, baseSummary: string): string => {
+    const prefix = {
+        Low: "LOW RISK: ",
+        Medium: "MODERATE RISK: ",
+        High: "HIGH RISK: "
+    }[severity];
+    return prefix + baseSummary;
+}
+
 
 const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   tool,
@@ -56,13 +67,19 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const [customerNewRevenue, setCustomerNewRevenue] = useState([10]);
   const [customerRetentionBoost, setCustomerRetentionBoost] = useState([5]);
   const [customerBrandEnhancement, setCustomerBrandEnhancement] = useState([5]);
-  const [customerRisk, setCustomerRisk] = useState([5]);
+  const [customerModelRisk, setCustomerModelRisk] = useState([8]);
+  const [customerSecurityRisk, setCustomerSecurityRisk] = useState([9]);
+  const [customerReputationRisk, setCustomerReputationRisk] = useState([7]);
+
 
   // State for Internal Advisor-Assist
   const [internalNewRevenue, setInternalNewRevenue] = useState([5]);
   const [internalRetentionBoost, setInternalRetentionBoost] = useState([10]);
   const [internalBrandEnhancement, setInternalBrandEnhancement] = useState([3]);
-  const [internalRisk, setInternalRisk] = useState([5]);
+  const [internalModelRisk, setInternalModelRisk] = useState([5]);
+  const [internalAdoptionRisk, setInternalAdoptionRisk] = useState([7]);
+  const [internalDataRisk, setInternalDataRisk] = useState([4]);
+
   
   const [
     recommendationText,
@@ -73,8 +90,11 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const customerImpact = customerNewRevenue[0] + customerRetentionBoost[0] + customerBrandEnhancement[0];
   const internalImpact = internalNewRevenue[0] + internalRetentionBoost[0] + internalBrandEnhancement[0];
 
-  const customerScore = customerImpact / (customerRisk[0] * customerRisk[0]);
-  const internalScore = internalImpact / (internalRisk[0] * internalRisk[0]);
+  const customerRisk = (customerModelRisk[0] + customerSecurityRisk[0] + customerReputationRisk[0]) / 3;
+  const internalRisk = (internalModelRisk[0] + internalAdoptionRisk[0] + internalDataRisk[0]) / 3;
+
+  const customerScore = customerImpact / (customerRisk * customerRisk);
+  const internalScore = internalImpact / (internalRisk * internalRisk);
 
   useEffect(() => {
     // Reset ROI analysis when view loads as it is no longer relevant
@@ -83,28 +103,36 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   }, [setRoiAnalysis]);
 
   const handleCalculate = () => {
-    const internalRiskData = [
-      { title: "Model Risk", icon: "brain", severity: "Medium" as const, summary: "Risk of inaccurate or biased AI predictions that could mislead our internal advisors.", mitigations: ["Human advisors act as a final validation layer.", "Continuously monitor model performance on internal data.", "Develop an internal 'AI Explainability' dashboard."] },
-      { title: "Implementation & Adoption Risk", icon: "people", severity: "High" as const, summary: "The primary risk: our financial advisors may resist the tool, fearing job displacement.", mitigations: ["Launch an 'AI Champion' program with early adopters.", "Develop a robust training and change management plan.", "Clearly communicate that the tool is for augmentation, not replacement."] },
-      { title: "Data Governance & Security Risk", icon: "shield", severity: "Medium" as const, summary: "Risk of internal data misuse. Less severe than a public breach but still significant.", mitigations: ["Enforce strict role-based access controls within the bank.", "Audit all data access logs.", "All data remains within OmniBank's secure infrastructure."] }
-    ];
-
-    const customerRiskData = [
-      { title: "Model Risk & Bias", icon: "brain", severity: "High" as const, summary: "CATACROPHIC RISK of biased advice causing direct customer harm and regulatory fines.", mitigations: ["Requires third-party ethical AI audits before launch.", "Implement complex bias detection algorithms.", "Extensive 'red team' testing for harmful outputs."] },
-      { title: "Data Privacy & Security Risk", icon: "shield", severity: "High" as const, summary: "Massive risk of a public data breach of sensitive customer financial data, leading to lawsuits.", mitigations: ["Requires end-to-end post-quantum cryptography.", "Full compliance with GDPR, CCPA, and the AI Act.", "Significant investment in cybersecurity infrastructure."] },
-      { title: "Reputational & Trust Risk", icon: "megaphone", severity: "High" as const, summary: "A single instance of a 'hallucinated' or harmful answer going viral could destroy customer trust.", mitigations: ["Implement a multi-layered content moderation system.", "Extensive PR and crisis communication plan required.", "Limit initial launch to a small, opt-in beta group."] }
-    ];
-
-
+    let newRiskProfile: Risk[];
+    
     if (internalScore >= customerScore) {
-      setRecommendationText(
-        'Recommended Pilot: Internal Advisor-Assist Tool'
-      );
-      setRiskProfile(internalRiskData);
+        setRecommendationText('Recommended Pilot: Internal Advisor-Assist Tool');
+        newRiskProfile = riskTemplate.internal.map(risk => {
+            let severityValue: number;
+            if (risk.id === 'model_risk') severityValue = internalModelRisk[0];
+            else if (risk.id === 'adoption_risk') severityValue = internalAdoptionRisk[0];
+            else if (risk.id === 'data_security_risk') severityValue = internalDataRisk[0];
+            else severityValue = 5; // Default
+            
+            const severity = sliderToSeverity(severityValue);
+            return { ...risk, severity, summary: severityToSummary(severity, risk.summary) };
+        });
+
     } else {
-      setRecommendationText('Recommended Pilot: Customer-Facing Chatbot');
-      setRiskProfile(customerRiskData);
+        setRecommendationText('Recommended Pilot: Customer-Facing Chatbot');
+        newRiskProfile = riskTemplate.customer.map(risk => {
+            let severityValue: number;
+            if (risk.id === 'model_bias') severityValue = customerModelRisk[0];
+            else if (risk.id === 'security_risk') severityValue = customerSecurityRisk[0];
+            else if (risk.id === 'reputation_risk') severityValue = customerReputationRisk[0];
+            else severityValue = 5; // Default
+
+            const severity = sliderToSeverity(severityValue);
+            return { ...risk, severity, summary: severityToSummary(severity, risk.summary) };
+        });
     }
+
+    setRiskProfile(newRiskProfile);
     setIsPrioritizerCompleted(true);
   };
   
@@ -195,39 +223,30 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
                         <span>Implementation Risk Model</span>
-                         <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{customerRisk[0]}</span>
+                         <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{customerRisk.toFixed(1)}</span>
                       </div>
                     </AccordionTrigger>
-                    <AccordionContent className="pt-4">
+                    <AccordionContent className="pt-4 space-y-6">
                       <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="riskA" className="font-semibold">
-                            Implementation Risk Score
-                          </Label>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                Estimate the <b>severe external risks</b> of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <Slider
-                            id="riskA"
-                            min={1}
-                            max={10}
-                            step={1}
-                            value={customerRisk}
-                            onValueChange={setCustomerRisk}
-                          />
-                          <span className="font-bold text-destructive w-8 text-center">
-                            {customerRisk[0]}
-                          </span>
-                        </div>
+                          <Label>Model Risk & Bias</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={customerModelRisk} onValueChange={setCustomerModelRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{customerModelRisk[0]}</span>
+                          </div>
+                      </div>
+                      <div className="space-y-3">
+                          <Label>Data Privacy & Security Risk</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={customerSecurityRisk} onValueChange={setCustomerSecurityRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{customerSecurityRisk[0]}</span>
+                          </div>
+                      </div>
+                      <div className="space-y-3">
+                          <Label>Reputational & Trust Risk</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={customerReputationRisk} onValueChange={setCustomerReputationRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{customerReputationRisk[0]}</span>
+                          </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
@@ -304,39 +323,30 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                     <AccordionTrigger className="text-base font-semibold">
                       <div className="flex items-center gap-2">
                           <span>Implementation Risk Model</span>
-                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{internalRisk[0]}</span>
+                          <span className="text-xs font-mono py-0.5 px-1.5 rounded-full bg-destructive/10 text-destructive">{internalRisk.toFixed(1)}</span>
                         </div>
                     </AccordionTrigger>
-                    <AccordionContent className="pt-4">
+                    <AccordionContent className="pt-4 space-y-6">
+                       <div className="space-y-3">
+                          <Label>Model Risk</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={internalModelRisk} onValueChange={setInternalModelRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{internalModelRisk[0]}</span>
+                          </div>
+                      </div>
                       <div className="space-y-3">
-                        <div className="flex items-center gap-2">
-                          <Label htmlFor="riskB" className="font-semibold">
-                            Implementation Risk Score
-                          </Label>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Info className="w-4 h-4 text-muted-foreground cursor-help" />
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p className="max-w-xs">
-                                Estimate the <b>contained internal risks</b> of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)
-                              </p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          <Slider
-                            id="riskB"
-                            min={1}
-                            max={10}
-                            step={1}
-                            value={internalRisk}
-                            onValueChange={setInternalRisk}
-                          />
-                          <span className="font-bold text-destructive w-8 text-center">
-                            {internalRisk[0]}
-                          </span>
-                        </div>
+                          <Label>Implementation & Adoption Risk</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={internalAdoptionRisk} onValueChange={setInternalAdoptionRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{internalAdoptionRisk[0]}</span>
+                          </div>
+                      </div>
+                      <div className="space-y-3">
+                          <Label>Data Governance & Security Risk</Label>
+                          <div className="flex items-center gap-4">
+                              <Slider min={1} max={10} step={1} value={internalDataRisk} onValueChange={setInternalDataRisk} />
+                              <span className="font-bold text-destructive w-8 text-center">{internalDataRisk[0]}</span>
+                          </div>
                       </div>
                     </AccordionContent>
                   </AccordionItem>
