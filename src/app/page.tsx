@@ -7,7 +7,6 @@ import AiLandscapeView from '@/components/sections/AiLandscapeView';
 import PilotPrioritizerView from '@/components/sections/PilotPrioritizerView';
 import RiskDashboardView from '@/components/sections/RiskDashboardView';
 import TheVerdictView from '@/components/sections/TheVerdictView';
-import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
 
 export type RiskSeverity = "High" | "Medium" | "Low";
 
@@ -102,9 +101,11 @@ export const riskTemplate: { internal: Risk[], customer: Risk[] } = {
 export default function Home() {
   const [activeView, setActiveView] = useState<View>('AI Landscape');
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
-  const [roiAnalysis, setRoiAnalysis] = useState<AnalyzePilotProjectOutput | null>(null);
   const [isPrioritizerCompleted, setIsPrioritizerCompleted] = useState(false);
   const [riskProfile, setRiskProfile] = useState<Risk[]>([]);
+  const [recommendationText, setRecommendationText] = useState('');
+  const [recommendedTier, setRecommendedTier] = useState('');
+  const [recommendedTierJustification, setRecommendedTierJustification] = useState('');
 
 
   const renderContent = () => {
@@ -120,11 +121,13 @@ export default function Home() {
         return (
           <PilotPrioritizerView
             tool={selectedTool}
-            setRoiAnalysis={setRoiAnalysis}
             setActiveView={setActiveView}
             setIsPrioritizerCompleted={setIsPrioritizerCompleted}
             isPrioritizerCompleted={isPrioritizerCompleted}
             setRiskProfile={setRiskProfile}
+            setRecommendationText={setRecommendationText}
+            setRecommendedTier={setRecommendedTier}
+            setRecommendedTierJustification={setRecommendedTierJustification}
           />
         );
       case 'Risk Dashboard':
@@ -136,7 +139,11 @@ export default function Home() {
         );
       case 'The Verdict':
         return (
-          <TheVerdictView />
+          <TheVerdictView 
+            recommendationText={recommendationText}
+            recommendedTier={recommendedTier}
+            recommendedTierJustification={recommendedTierJustification}
+          />
         );
       default:
         return null;
