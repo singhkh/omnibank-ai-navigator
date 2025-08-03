@@ -3,10 +3,10 @@
 import React, { useState, useMemo } from 'react';
 import Header from '@/components/layout/header';
 import Navigation, { type View } from '@/components/layout/navigation';
-import AiLandscape from '@/components/sections/ai-landscape';
-import PilotPrioritizer from '@/components/sections/pilot-prioritizer';
-import RiskDashboard from '@/components/sections/risk-dashboard';
-import TheVerdict from '@/components/sections/the-verdict';
+import AiLandscapeView from '@/components/sections/AiLandscapeView';
+import PilotPrioritizerView from '@/components/sections/PilotPrioritizerView';
+import RiskDashboardView from '@/components/sections/RiskDashboardView';
+import TheVerdictView from '@/components/sections/TheVerdictView';
 import type { AnalyzePilotProjectOutput } from '@/ai/flows/ai-driven-roi-analysis';
 
 export default function Home() {
@@ -23,14 +23,14 @@ export default function Home() {
     switch (activeView) {
       case 'AI Landscape':
         return (
-          <AiLandscape
+          <AiLandscapeView
             setSelectedTool={setSelectedTool}
             setActiveView={setActiveView}
           />
         );
       case 'Pilot Prioritizer':
         return (
-          <PilotPrioritizer
+          <PilotPrioritizerView
             tool={selectedTool}
             setRoiAnalysis={setRoiAnalysis}
             setActiveView={setActiveView}
@@ -38,7 +38,7 @@ export default function Home() {
         );
       case 'Risk Dashboard':
         return (
-          <RiskDashboard
+          <RiskDashboardView
             tool={selectedTool}
             roiAnalysis={roiAnalysis}
             setRiskAssessment={setRiskAssessment}
@@ -47,7 +47,7 @@ export default function Home() {
         );
       case 'The Verdict':
         return (
-          <TheVerdict
+          <TheVerdictView
             tool={selectedTool}
             roiAnalysis={roiAnalysis}
             riskAssessment={riskAssessment}
