@@ -202,7 +202,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                             <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                           </TooltipTrigger>
                           <TooltipContent>
-                            <p className="max-w-xs">Estimate the **optimistic financial upside** of a public launch. Consider new revenue, customer retention, and brand lift. (Scale: 1=Marginal, 10=Transformational)</p>
+                            <p className="max-w-xs">Expand this section to model the potential financial upside. Adjust the underlying drivers to see how they affect the overall impact score.</p>
                           </TooltipContent>
                         </Tooltip>
                         <span>Financial Impact Model</span>
@@ -268,7 +268,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                 <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p className="max-w-xs">Estimate the **severe external risks** of a public launch. Consider regulatory fines, public backlash from biased advice, and reputational damage. (Scale: 1=Low/Manageable, 10=High/Potentially Catastrophic)</p>
+                                <p className="max-w-xs">Expand this section to model the potential downsides. Adjust the granular risk factors to see how they influence the overall risk score for this option.</p>
                             </TooltipContent>
                         </Tooltip>
                         <span>Implementation Risk Model</span>
@@ -321,7 +321,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                   <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                               </TooltipTrigger>
                               <TooltipContent>
-                                  <p className="max-w-xs">Estimate the **pragmatic financial upside** of an internal launch. Focus on concrete efficiency gains, improved compliance, and long-term capability building. (Scale: 1=Marginal, 10=Significant)</p>
+                                  <p className="max-w-xs">Expand this section to model the potential financial upside. Adjust the underlying drivers to see how they affect the overall impact score.</p>
                               </TooltipContent>
                           </Tooltip>
                           <span>Financial Impact Model</span>
@@ -387,7 +387,7 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
                                   <Info className="h-4 w-4 text-muted-foreground cursor-help" />
                               </TooltipTrigger>
                               <TooltipContent>
-                                  <p className="max-w-xs">Estimate the **contained internal risks** of this pilot. The primary challenges are employee adoption and change management, which are manageable. (Scale: 1=Low/Manageable, 10=High/Significant Resistance)</p>
+                                  <p className="max-w-xs">Expand this section to model the potential downsides. Adjust the granular risk factors to see how they influence the overall risk score for this option.</p>
                               </TooltipContent>
                           </Tooltip>
                           <span>Implementation Risk Model</span>
