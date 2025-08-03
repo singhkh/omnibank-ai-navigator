@@ -45,12 +45,18 @@ const sliderToSeverity = (value: number): RiskSeverity => {
   return "High";
 };
 
-const severityToSummary = (severity: RiskSeverity, baseSummary: string): string => {
+const getDynamicSummary = (id: string, value: number, baseSummary: string): string => {
+    const severity = sliderToSeverity(value);
     const prefix = {
         Low: "LOW RISK: ",
         Medium: "MODERATE RISK: ",
         High: "HIGH RISK: "
     }[severity];
+    
+    if (id === 'adoption_risk' || id === 'reputation_risk') {
+         if (severity === "High") return `CRITICAL RISK: ${baseSummary}`;
+    }
+
     return prefix + baseSummary;
 }
 
@@ -93,8 +99,8 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
   const customerRisk = (customerModelRisk[0] + customerSecurityRisk[0] + customerReputationRisk[0]) / 3;
   const internalRisk = (internalModelRisk[0] + internalAdoptionRisk[0] + internalDataRisk[0]) / 3;
 
-  const customerScore = customerImpact / (customerRisk * customerRisk);
-  const internalScore = internalImpact / (internalRisk * internalRisk);
+  const customerScore = customerRisk > 0 ? customerImpact / (customerRisk * customerRisk) : customerImpact;
+  const internalScore = internalRisk > 0 ? internalImpact / (internalRisk * internalRisk) : internalImpact;
 
   useEffect(() => {
     // Reset ROI analysis when view loads as it is no longer relevant
@@ -104,34 +110,56 @@ const PilotPrioritizerView: React.FC<PilotPrioritizerViewProps> = ({
 
   const handleCalculate = () => {
     let newRiskProfile: Risk[];
-    
-    if (internalScore >= customerScore) {
-        setRecommendationText('Recommended Pilot: Internal Advisor-Assist Tool');
-        newRiskProfile = riskTemplate.internal.map(risk => {
+    const winner = internalScore >= customerScore ? 'internal' : 'customer';
+
+    const templateToUse = riskTemplate[winner];
+    let recommendedPathText = '';
+
+    if (winner === 'internal') {
+        recommendedPathText = 'Recommended Pilot: Internal Advisor-Assist Tool';
+        newRiskProfile = templateToUse.map(risk => {
             let severityValue: number;
-            if (risk.id === 'model_risk') severityValue = internalModelRisk[0];
-            else if (risk.id === 'adoption_risk') severityValue = internalAdoptionRisk[0];
-            else if (risk.id === 'data_security_risk') severityValue = internalDataRisk[0];
-            else severityValue = 5; // Default
-            
+            switch (risk.id) {
+                case 'model_risk':
+                    severityValue = internalModelRisk[0];
+                    break;
+                case 'adoption_risk':
+                    severityValue = internalAdoptionRisk[0];
+                    break;
+                case 'data_security_risk':
+                    severityValue = internalDataRisk[0];
+                    break;
+                default:
+                    severityValue = 5;
+            }
             const severity = sliderToSeverity(severityValue);
-            return { ...risk, severity, summary: severityToSummary(severity, risk.summary) };
+            const summary = getDynamicSummary(risk.id, severityValue, risk.summary);
+            return { ...risk, severity, summary };
         });
-
     } else {
-        setRecommendationText('Recommended Pilot: Customer-Facing Chatbot');
-        newRiskProfile = riskTemplate.customer.map(risk => {
+        recommendedPathText = 'Recommended Pilot: Customer-Facing Chatbot';
+        newRiskProfile = templateToUse.map(risk => {
             let severityValue: number;
-            if (risk.id === 'model_bias') severityValue = customerModelRisk[0];
-            else if (risk.id === 'security_risk') severityValue = customerSecurityRisk[0];
-            else if (risk.id === 'reputation_risk') severityValue = customerReputationRisk[0];
-            else severityValue = 5; // Default
-
+            switch(risk.id) {
+                case 'model_bias':
+                    severityValue = customerModelRisk[0];
+                    break;
+                case 'security_risk':
+                    severityValue = customerSecurityRisk[0];
+                    break;
+                case 'reputation_risk':
+                    severityValue = customerReputationRisk[0];
+                    break;
+                default:
+                    severityValue = 5;
+            }
             const severity = sliderToSeverity(severityValue);
-            return { ...risk, severity, summary: severityToSummary(severity, risk.summary) };
+            const summary = getDynamicSummary(risk.id, severityValue, risk.summary);
+            return { ...risk, severity, summary };
         });
     }
 
+    setRecommendationText(recommendedPathText);
     setRiskProfile(newRiskProfile);
     setIsPrioritizerCompleted(true);
   };
